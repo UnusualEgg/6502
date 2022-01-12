@@ -27,7 +27,7 @@ int main(int argc, char const *argv[])
 	pflen = pf.tellg()-pflen; //end-begining
 	if (pf.good()){
 		std::cout<<"good!\n";
-	}
+
 	pf.seekg(0);
 	char prg[(int)pflen];
 	pf.read(&prg[0],pflen);
@@ -43,39 +43,36 @@ int main(int argc, char const *argv[])
 
 	//time to load the prg into memory
 	std::cout<<"mem:[";
-	for (int i=0;i<pflen;i++){
-		mem[i]=prg[i];
+	for (int i=0x4020;i<pflen+0x4020;i++){
+		mem[i+0x4020]=prg[i];
 		std::cout<<i<<' '<<(uint)libbase::read(ptr,i) <<", ";
 	}
 	std::cout<<"\b\b]\n";
 	for (int i=pflen;i<0xffff;i++){
-		mem[i]=0;
+		mem[i]=0x01;
 	}
 
 
-	mem[0xfffc]=(int8)startaddr<<8;
-	mem[0xfffd]=(int8)startaddr&0x00ff;
-
-
-	// std::map<char[2], int*> regs;
-	// regs[""]
-	/* code */
-	// std::cout<<"Hello!\n";
+	
 	libbase::cpustruct cpu;
 	libbase::Emulator emulator;
-	// char buff[2];
-	// char* bptr=&name[0];
-	// bptr=len
+
+	//check typeof(len)
 	char *name=abi::__cxa_demangle(typeid(pflen).name(), 0, 0, 0);
 	std::cout<<"type of len:"<<name<<std::endl;
 	// std::cout<<"len:"<<len<<std::endl;
-	// Emulator emulator();
+
+	//set instruction to functions
 	setins(&emulator);
 	emulator.RESET(ptr, &cpu);
 	std::cout<<"cpu axy:"<<(int)cpu.a<<' '<<(int)cpu.x<<' '<<(int)cpu.y<<'\n';
 	// printf("a:%u\n",cpu.a);
 	// free(name);
 	// std::cout<<emulator.ins[0x4c]<<'\n';
+	} else {
+		pf.close();
+		std::cout<<"file bad";
+	}
 	return 0;
 }
 
