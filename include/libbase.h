@@ -695,6 +695,231 @@ void clv(int8 *mem, libbase::cpustruct* cpu) {//clear overflow flag
 	}
 }
 
+void cmp(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xc9://immidiate
+			result=cpu->a-libbase::read(mem,cpu->pc+1);
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xc5://zpg
+			result=cpu->a-libbase::read(libbase::read(mem,cpu->pc+1));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xd5://zpg,x
+			result=cpu->a-libbase::read(libbase::read(mem,cpu->pc+1)+cpu->x);
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xcd://absolute
+			result=cpu->a-libbase::read(readaddr(mem,cpu->pc+1));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+		case 0xdd://absolute,x
+			result=cpu->a-libbase::read(readaddr(mem,cpu->pc+1)+cpu->x);
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+		case 0xd9://absolute,y
+			result=cpu->a-libbase::read(readaddr(mem,cpu->pc+1)+cpu->y);
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+		case 0xc1://indirect+xoff
+			result=cpu->a-libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)+cpu->x));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xd1://indirect+y
+			result=cpu->a-libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)))+cpu->y;
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->a,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+	}
+}
+
+void cpx(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xe0://immidiate
+			result=cpu->x-libbase::read(mem,cpu->pc+1);
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->x,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xe4://zpg
+			result=cpu->x-libbase::read(libbase::read(mem,cpu->pc+1));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->x,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xec://absolute
+			result=cpu->x-libbase::read(readaddr(mem,cpu->pc+1));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->x,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+	}
+}
+
+void cpy(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xc0://immidiate
+			result=cpu->y-libbase::read(mem,cpu->pc+1);
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->y,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xc4://zpg
+			result=cpu->y-libbase::read(libbase::read(mem,cpu->pc+1));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->y,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xcc://absolute
+			result=cpu->y-libbase::read(mem, readaddr(mem,cpu->pc+1));
+			//set the carry bit
+			if (result|0b100000000) {
+				cpu->sr|=cbit;
+			} else {
+				cpu->sr&=~cbit;
+			}
+			setsrbits(cpu, cpu->y,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+	}
+}
+
+void dec(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xc6://zpg
+			int8 num = libbase::read(libbase::read(mem,cpu->pc+1));
+			int8 addr = libbase::read(mem,cpu->pc+1);
+			int8 result = num-1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xd6://zpg,x
+			int8 num = libbase::read(libbase::read(mem,cpu->pc+1)+cpu->x);
+			int8 addr = libbase::read(mem,cpu->pc+1);
+			int8 result = num-1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xce://abs
+			int8 num = libbase::read(readaddr(mem,cpu->pc+1));
+			int8 addr = libbase::read(mem,cpu->pc+1);
+			int8 result = num-1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+		case 0xde://abs,x
+			int8 num = libbase::read(readaddr(mem,cpu->pc+1)+cpu->x);
+			int8 addr = libbase::read(mem,cpu->pc+1);
+			int8 result = num-1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+	}
+}
+
+void dex(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xca://implied
+			cpu->x--;
+			setsrbits(cpu,0,cpu->x,nbit|zbit);
+			cpu->pc+=1;
+	}
+}
+
+void dey(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0x88://implied
+			cpu->y--;
+			setsrbits(cpu,0,cpu->y,nbit|zbit);
+			cpu->pc+=1;
+	}
+}
+
+
 
 
 
@@ -868,6 +1093,33 @@ void setins(libbase::Emulator* emu) {
 	emu->ins[0xd8]=&cld;
 	emu->ins[0x58]=&cli;
 	emu->ins[0xb8]=&clv;
+	
+	emu->ins[0xc9]=&cmp;
+	emu->ins[0xc5]=&cmp;
+	emu->ins[0xd5]=&cmp;
+	emu->ins[0xcd]=&cmp;
+	emu->ins[0xdd]=&cmp;
+	emu->ins[0xd9]=&cmp;
+	emu->ins[0xc1]=&cmp;
+	emu->ins[0xd1]=&cmp;
+
+	emu->ins[0xe0]=&cpx;
+	emu->ins[0xe4]=&cpx;
+	emu->ins[0xec]=&cpx;
+
+	emu->ins[0xc0]=&cpy;
+	emu->ins[0xc4]=&cpy;
+	emu->ins[0xcc]=&cpy;
+
+	emu->ins[0xc6]=&dec;
+	emu->ins[0xd6]=&dec;
+	emu->ins[0xce]=&dec;
+	emu->ins[0xde]=&dec;
+
+	emu->ins[0xca]=&dex;
+
+	emu->ins[0x88]=&dey;
+
 
 
 
