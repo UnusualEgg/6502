@@ -170,7 +170,7 @@ void NMI(int8 *mem, libbase::cpustruct *cpu) {
 	//push processor status register
 	php(mem,cpu);
 	//set interrupt disable
-	cpu,cpu->sr|=ibit;//3rd bit /irq disable
+	cpu->sr|=ibit;//3rd bit /irq disable
 	//go to addr (nmi fffc/fffd)
 	loadaddrbig(mem,cpu,0xfffc);
 }
@@ -192,7 +192,7 @@ void BRK(int8 *mem, libbase::cpustruct *cpu) {
 	//push processor status register
 	php(mem,cpu);
 	//set interrupt disable
-	cpu,cpu->sr|=ibit|bbit;//3rd bit /irq disable and break bit (16)
+	cpu->sr|=ibit|bbit;//3rd bit /irq disable and break bit (16)
 	//go to addr (nmi fffe/ffff)
 	loadaddrbig(mem,cpu,0xfffe);
 	std::cout<<"BRK!\n";
@@ -211,7 +211,10 @@ void setsrbits(libbase::cpustruct *cpu, int8 tmp,int8 result, int8 mask) {
 	//set bits
 	//overflow
 	//if operands the aren't the same sign as the result
-	if (tmp&sign==off&sign && tmp&sign!=result&sign) {
+	int8 tmpsign=tmp&sign;
+	int8 offsign=off&sign;
+	int8 resultsign=result&sign;
+	if (tmpsign==offsign && tmpsign!=resultsign) {
 		tmpsr|=vbit;
 	} else {
 		off|=vbit;
@@ -220,7 +223,7 @@ void setsrbits(libbase::cpustruct *cpu, int8 tmp,int8 result, int8 mask) {
 	if (result==0) {
 		tmpsr|=zbit;//zero bit 0b10
 	} else {
-		off|=zbit
+		off|=zbit;
 	}
 	//negative
 	if (result>=0b10000000) {
@@ -252,7 +255,7 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 				cpu->sr&=~cbit;
 			}
 			cpu->a=(int8)result;
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=2;
 			std::cout<<"adc "<<libbase::read(mem, cpu->pc+1)+(cpu->sr&0b00000001)<<std::endl;
 			break;
@@ -266,7 +269,7 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=2;
 			break;
 		case 0x75://zpg,x
@@ -279,7 +282,7 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=2;
 			break;
 		case 0x6d://absolute
@@ -292,7 +295,7 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=3;
 			break;
 		case 0x7d://absolute,x
@@ -305,7 +308,7 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=3;
 			break;
 		case 0x79://abs,y
@@ -318,12 +321,12 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=3;
 			break;
 		case 0x61://ind+offx
 			//						           -----pointing to      --------operand----
-			result=(int)cpu->a+(int)readaddr(readaddr(mem,libbase::read(mem,cpu->pc+1))+cpu->x)+(int)(cpu->sr&0b01);
+			result=(int)cpu->a+(int)readaddr(mem,readaddr(mem,libbase::read(mem,cpu->pc+1))+cpu->x)+(int)(cpu->sr&0b01);
 			//set carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -332,11 +335,11 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=2;
 			break;
 		case 0x71://ind+y
-			result=(int)cpu->a+(int)readaddr(readaddr(mem,libbase::read(mem,cpu->pc+1)))+(int)cpu->y+(int)(cpu->sr&0b01);
+			result=(int)cpu->a+(int)readaddr(mem, readaddr(mem,libbase::read(mem,cpu->pc+1)))+(int)cpu->y+(int)(cpu->sr&0b01);
 			//set carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -345,7 +348,7 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=2;
 			break;
 	}
@@ -353,46 +356,46 @@ void adc(int8 *mem, libbase::cpustruct* cpu){
 
 //DONE
 void ins_and(int8 *mem, libbase::cpustruct* cpu) {
-	switch (libbase::read(mem,cpu->pc)) {
 	int8 tmp=cpu->a;
+	switch (libbase::read(mem,cpu->pc)) {
 		case 0x29://imm
 			cpu->a&=libbase::read(mem,cpu->pc);
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=2;
 			break;
 		case 0x25://zpg
 			cpu->a&=libbase::read(mem,libbase::read(mem,cpu->pc+1));
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=2;
 			break;
 		case 0x35://zpg,x
 			cpu->a&=libbase::read(mem,libbase::read(mem,cpu->pc+1)+cpu->x);
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=2;
 			break;
 		case 0x2d://abs
 			cpu->a&=libbase::read(mem,readaddr(mem,cpu->pc+1));
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=3;
 			break;
 		case 0x3d://abs,x
 			cpu->a&=libbase::read(mem,readaddr(mem,cpu->pc+1)+cpu->x);
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=3;
 			break;
 		case 0x39://abs,y
 			cpu->a&=libbase::read(mem,readaddr(mem,cpu->pc+1)+cpu->y);
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=3;
 			break;
 		case 0x21://(indirect,x)
 			cpu->a&=libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)+cpu->x ));
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=2;
 			break;
 		case 0x31://(indirect),y
 			cpu->a&=libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)));
-			setsrbits(tmp,cpu->a,nbit|zbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit);
 			cpu->pc+=2;
 			break;
 	}
@@ -401,6 +404,7 @@ void ins_and(int8 *mem, libbase::cpustruct* cpu) {
 //DONE
 void asl(int8 *mem, libbase::cpustruct* cpu) {
 	int8 tmp;
+	int result;
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x0a://accumulator
 			tmp=cpu->a;
@@ -413,12 +417,12 @@ void asl(int8 *mem, libbase::cpustruct* cpu) {
 			}
 			cpu->a=(int8)result;
 			//set other bits
-			setsrbits(tmp,cpu->a,nbit|zbit|vbit);
+			setsrbits(cpu, tmp,cpu->a,nbit|zbit|vbit);
 			cpu->pc+=1;
 			break;
 		case 0x07://zpg
-			tmp=libbase::read(mem,cpu->pc+1)
-			result=(int)libbase::read(mem,cpu->pc+1)<<1
+			tmp=libbase::read(mem,cpu->pc+1);
+			result=(int)libbase::read(mem,cpu->pc+1)<<1;
 			//set carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -441,8 +445,8 @@ void asl(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0x0e://abs
-			tmp=libbase::read(readaddr(mem,cpu->pc+1));
-			result=libbase::read(readaddr(mem,cpu->pc+1))<<1;
+			tmp=libbase::read(mem, readaddr(mem,cpu->pc+1));
+			result=libbase::read(mem, readaddr(mem,cpu->pc+1))<<1;
 			//set carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -453,8 +457,8 @@ void asl(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0x1e://abs,x
-			tmp=libbase::read(readaddr(mem,cpu->pc+1)+cpu->x);
-			result=libbase::read(readaddr(mem,cpu->pc+1)+cpu->x)<<1;
+			tmp=libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x);
+			result=libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x)<<1;
 			//set carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -471,7 +475,7 @@ void bcc(int8 *mem, libbase::cpustruct* cpu) {//branch on carry clear
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x90://relative
 			int8 off=libbase::read(mem,cpu->pc+1);
-			if (off&0b10000000!=0){
+			if ((off&0b10000000)!=0){
 				//add1 then invert
 				cpu->pc-=~(off+1);
 			} else {
@@ -642,7 +646,7 @@ void setins(libbase::Emulator* emu) {
 	emu->ins[0x0e]=&asl;
 	emu->ins[0x1e]=&asl;
 	//done
-	emu->ins[0x90=&bcc;
+	emu->ins[0x90]=&bcc;
 
 
 	emu->ins[0x00]=&BRK;
