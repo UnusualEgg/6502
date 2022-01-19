@@ -21,36 +21,42 @@ int main(int argc, char const *argv[])
 
 	//find length of prg and read prg
 	std::streampos pflen;
-	std::ifstream pf("prg.bin", std::ifstream::binary);
+	std::ifstream pf("prg.nes", std::ifstream::binary);
 	pflen = pf.tellg(); //begining
 	pf.seekg(0, std::ios::end);
 	pflen = pf.tellg()-pflen; //end-begining
 	if (pf.good()){
 		std::cout<<"good!\n";
 
-	pf.seekg(0);
+	pf.seekg(16);
 	char prg[(int)pflen];
 	pf.read(&prg[0],pflen);
 	pf.close();
 
 	//print length of prg and prg itself
-	std::cout<<std::hex<<"len:"<<pflen<<std::endl<<"prg:[";
-	for (int i = 0; i < pflen; ++i) {
-		std::cout<<((uint)prg[i]&0xff)<<' ';
-	}
-	std::cout<<"\b]\n";
+	// std::cout<<std::hex<<"len:"<<pflen<<std::endl<<"prg:[";
+	// for (int i = 0; i < pflen; ++i) {
+	// 	std::cout<<((uint)prg[i]&0xff)<<' ';
+	// }
+	// std::cout<<"\b]\n";
 	//----(prg is in (char)prg array)
 
 	//time to load the prg into memory
-	std::cout<<"mem:[";
-	for (int i=0x4020;i<pflen+0x4020;i++){
-		mem[i+0x4020]=prg[i];
-		std::cout<<i<<' '<<(uint)libbase::read(ptr,i) <<", ";
+	for (uint i=0;i<pflen and i<0x10000;i++){
+		mem[i]=prg[i];//+16 bc header
+	}
+
+	std::cout<<std::hex<<"mem:[";
+	for (uint i=0;;i++) {
+		std::cout<<i<<' '<<(int)libbase::read(ptr,i) <<", ";
+		if (i==0xffff){
+			break;
+		}
 	}
 	std::cout<<"\b\b]\n";
-	for (int i=pflen;i<0xffff;i++){
-		mem[i]=0x01;
-	}
+	// for (int i=pflen;i<0xffff;i++){
+	// 	mem[i]=0x01;
+	// }
 
 
 	

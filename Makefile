@@ -13,6 +13,12 @@ OBJ := $($(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 all: $(EXE)
 
+prg: prg.nes
+prg.nes: prg.o
+	ld65 --config nes.cfg -o prg.nes prg.o
+prg.o:
+	ca65 -o prg.o prg.s
+
 $(EXE): $(OBJ_DIR) $(OBJ_DIR)/nes.o
 # 	echo clang++ $(LDFLAGS) $(OBJ) -o $@
 	clang++ $(LDFLAGS) $(OBJ_DIR)/nes.o -o nes

@@ -42,4 +42,15 @@ rel	relative	OPC $BB	branch target is PC + signed offset BB ***
 zpg	zeropage	OPC $LL	operand is zeropage address (hi-byte is zero, address = $00LL)
 zpg,X	zeropage, X-indexed	OPC $LL,X	operand is zeropage address; effective address is address incremented by X without carry **
 zpg,Y	zeropage, Y-indexed	OPC $LL,Y	operand is zeropage address; effective address is address incremented by Y without carry **
+
+
+SR Flags (bit 7 to bit 0)
+N	Negative
+V	Overflow
+-	ignored
+B	Break
+D	Decimal (use BCD for arithmetics)
+I	Interrupt (IRQ disable)
+Z	Zero
+C	Carry
 */
