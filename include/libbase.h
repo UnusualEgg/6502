@@ -1137,6 +1137,66 @@ void ldy(int8 *mem, libbase::cpustruct* cpu) {
 	}
 }
 
+void lsr(int8 *mem, libbase::cpustruct* cpu) {
+	int8 n,result;
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0x4a://accumulator
+			if ((cpu->a&1)!=0){
+				cpu->sr|=cbit;
+			}
+			cpu->a=cpu->a>>1;
+			setsrbits(cpu,0,cpu->a,zbit);
+			cpu->sr&=(~nbit);//set nbit 0
+			cpu->pc+=1;
+		case 0x46://zpg
+			n=libbase::read(mem, libbase::read(mem,cpu->pc+1));
+			if ((n&1)!=0){
+				cpu->sr|=cbit;
+			}
+			result=n>>1;
+			setsrbits(cpu,0,result,zbit);
+			cpu->sr&=(~nbit);//set nbit 0
+			libbase::write(mem,libbase::read(mem,cpu->pc+1),result);
+			cpu->pc+=2;
+		case 0x56://zpg,x
+			n=libbase::read(mem, libbase::read(mem,cpu->pc+1)+cpu->x);
+			if ((n&1)!=0){
+				cpu->sr|=cbit;
+			}
+			result=n>>1;
+			setsrbits(cpu,0,result,zbit);
+			cpu->sr&=(~nbit);//set nbit 0
+			libbase::write(mem,libbase::read(mem,cpu->pc+1),result);
+			cpu->pc+=2;
+		case 0x4e://abs
+			n=libbase::read(mem, readaddr(mem,cpu->pc+1));
+			if ((n&1)!=0){
+				cpu->sr|=cbit;
+			}
+			result=n>>1;
+			setsrbits(cpu,0,result,zbit);
+			cpu->sr&=(~nbit);//set nbit 0
+			libbase::write(mem,libbase::read(mem,cpu->pc+1),result);
+			cpu->pc+=2;
+		case 0x5e://abs,x
+			n=libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x);
+			if ((n&1)!=0){
+				cpu->sr|=cbit;
+			}
+			result=n>>1;
+			setsrbits(cpu,0,result,zbit);
+			cpu->sr&=(~nbit);//set nbit 0
+			libbase::write(mem,libbase::read(mem,cpu->pc+1),result);
+			cpu->pc+=2;
+	}
+}
+
+void nop(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xea:
+			cpu->pc+=1;
+	}
+}
 
 
 
@@ -1277,6 +1337,14 @@ void setins(libbase::Emulator* emu) {
 	emu->ins[0xb4]=&ldy;
 	emu->ins[0xac]=&ldy;
 	emu->ins[0xbc]=&ldy;
+
+	emu->ins[0x4a]=&lsr;
+	emu->ins[0x46]=&lsr;
+	emu->ins[0x56]=&lsr;
+	emu->ins[0x4e]=&lsr;
+	emu->ins[0x5e]=&lsr;
+
+	emu->ins[0xea]=&nop;
 
 
 
