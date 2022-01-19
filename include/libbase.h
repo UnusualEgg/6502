@@ -98,7 +98,7 @@ void loadaddrbig(int8 *mem, libbase::cpustruct* cpu, uint16 addr) {
 	cpu->pc=(((uint16)libbase::read(mem,addr))<<8)+ ((uint16)libbase::read(mem,addr+1));
 }
 
-void pushpc(int8 *mem, libbase::cpustruct* cpu, uint16 off) {
+void pushpc(int8 *mem, libbase::cpustruct* cpu, uint16 off=0) {
 	cpu->pc--;
 	libbase::write(mem, cpu->sp, (int8)(((cpu->pc+off)&0xff00)>>8));
 	cpu->pc--;
@@ -474,7 +474,7 @@ void asl(int8 *mem, libbase::cpustruct* cpu) {
 void bcc(int8 *mem, libbase::cpustruct* cpu) {//branch on carry clear
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x90://relative
-			if (cpu->sr&cbit==0) {
+			if ((cpu->sr&cbit)==0) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -484,7 +484,7 @@ void bcc(int8 *mem, libbase::cpustruct* cpu) {//branch on carry clear
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -493,7 +493,7 @@ void bcc(int8 *mem, libbase::cpustruct* cpu) {//branch on carry clear
 void bcs(int8 *mem, libbase::cpustruct* cpu) {//branch on carry set
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xb0://relative
-			if (cpu->sr&cbit==1) {
+			if ((cpu->sr&cbit)==1) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -503,7 +503,7 @@ void bcs(int8 *mem, libbase::cpustruct* cpu) {//branch on carry set
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -512,7 +512,7 @@ void bcs(int8 *mem, libbase::cpustruct* cpu) {//branch on carry set
 void beq(int8 *mem, libbase::cpustruct* cpu) {//branch on equal zero
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xf0://relative
-			if (cpu->sr&zbit==1) {
+			if ((cpu->sr&zbit)==1) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -522,41 +522,42 @@ void beq(int8 *mem, libbase::cpustruct* cpu) {//branch on equal zero
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
 }
 
 void bit(int8 *mem, libbase::cpustruct* cpu) {//Test Bits in Memory with Accumulator
+	int8 m;
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x24://zpg
-			int8 m = libbase::read(mem,cpu->pc+1);
-			if (m&nbit!=0){
+			m = libbase::read(mem,cpu->pc+1);
+			if ((m&nbit)!=0){
 				cpu->sr|=nbit;
 			}
-			if (m&zbit!=0){
-				cpu->sr|=zbit;
+			if ((m&vbit)!=0){
+				cpu->sr|=vbit;
 			}
 			if ((m&cpu->a)==0){
-				cpu->sr!=zbit;
+				cpu->sr|=zbit;
 			} else {
-				cpu->sr&(~zbit);
+				cpu->sr&=(~zbit);
 			}
 			cpu->pc+=2;
 			break;
 		case 0x2c://abs
-			int8 m = libbase::read(mem, readaddr(mem,cpu->pc+1));
-			if (m&nbit!=0){
+			m = libbase::read(mem, readaddr(mem,cpu->pc+1));
+			if ((m&nbit)!=0){
 				cpu->sr|=nbit;
 			}
-			if (m&zbit!=0){
-				cpu->sr|=zbit;
+			if ((m&vbit)!=0){
+				cpu->sr|=vbit;
 			}
 			if ((m&cpu->a)==0){
-				cpu->sr!=zbit;
+				cpu->sr|=zbit;
 			} else {
-				cpu->sr&(~zbit);
+				cpu->sr&=(~zbit);
 			}
 			cpu->pc+=3;
 			break;
@@ -567,7 +568,7 @@ void bit(int8 *mem, libbase::cpustruct* cpu) {//Test Bits in Memory with Accumul
 void bmi(int8 *mem, libbase::cpustruct* cpu) {//branch on result minus
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x30://relative
-			if (cpu->sr&nbit==1) {
+			if ((cpu->sr&nbit)==1) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -577,7 +578,7 @@ void bmi(int8 *mem, libbase::cpustruct* cpu) {//branch on result minus
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -586,7 +587,7 @@ void bmi(int8 *mem, libbase::cpustruct* cpu) {//branch on result minus
 void bne(int8 *mem, libbase::cpustruct* cpu) {//branch on result not zero
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x10://relative
-			if (cpu->sr&zbit==0) {
+			if ((cpu->sr&zbit)==0) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -596,7 +597,7 @@ void bne(int8 *mem, libbase::cpustruct* cpu) {//branch on result not zero
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -605,7 +606,7 @@ void bne(int8 *mem, libbase::cpustruct* cpu) {//branch on result not zero
 void bpl(int8 *mem, libbase::cpustruct* cpu) {//branch on result plus
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xd0://relative
-			if (cpu->sr&nbit==0) {
+			if ((cpu->sr&nbit)==0) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -615,7 +616,7 @@ void bpl(int8 *mem, libbase::cpustruct* cpu) {//branch on result plus
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -624,7 +625,7 @@ void bpl(int8 *mem, libbase::cpustruct* cpu) {//branch on result plus
 void bvc(int8 *mem, libbase::cpustruct* cpu) {//branch on overflow clear
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x50://relative
-			if (cpu->sr&vbit==0) {
+			if ((cpu->sr&vbit)==0) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -634,7 +635,7 @@ void bvc(int8 *mem, libbase::cpustruct* cpu) {//branch on overflow clear
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -643,7 +644,7 @@ void bvc(int8 *mem, libbase::cpustruct* cpu) {//branch on overflow clear
 void bvs(int8 *mem, libbase::cpustruct* cpu) {//branch on overflow set
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0x70://relative
-			if (cpu->sr&vbit==0) {
+			if ((cpu->sr&vbit)==0) {
 				int8 off=libbase::read(mem,cpu->pc+1);
 				if ((off&0b10000000)!=0){
 					//add1 then invert
@@ -653,7 +654,7 @@ void bvs(int8 *mem, libbase::cpustruct* cpu) {//branch on overflow set
 					cpu->pc+=off+3;
 				}
 			} else {
-				cpu->pc+=2
+				cpu->pc+=2;
 			}
 			break;
 	}
@@ -696,11 +697,12 @@ void clv(int8 *mem, libbase::cpustruct* cpu) {//clear overflow flag
 }
 
 void cmp(int8 *mem, libbase::cpustruct* cpu) {
+	uint16 result;
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xc9://immidiate
-			result=cpu->a-libbase::read(mem,cpu->pc+1);
+			result=(uint16)cpu->a-(uint16)libbase::read(mem,cpu->pc+1);
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -709,9 +711,9 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xc5://zpg
-			result=cpu->a-libbase::read(libbase::read(mem,cpu->pc+1));
+			result=(uint16)cpu->a-(uint16)libbase::read(mem, libbase::read(mem,cpu->pc+1));
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -720,7 +722,7 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xd5://zpg,x
-			result=cpu->a-libbase::read(libbase::read(mem,cpu->pc+1)+cpu->x);
+			result=(uint16)cpu->a-(uint16)libbase::read(mem, libbase::read(mem,cpu->pc+1)+cpu->x);
 			//set the carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -731,7 +733,7 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xcd://absolute
-			result=cpu->a-libbase::read(readaddr(mem,cpu->pc+1));
+			result=(uint16)cpu->a-(uint16)libbase::read(mem, readaddr(mem,cpu->pc+1));
 			//set the carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -742,7 +744,7 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=3;
 			break;
 		case 0xdd://absolute,x
-			result=cpu->a-libbase::read(readaddr(mem,cpu->pc+1)+cpu->x);
+			result=(uint16)cpu->a-(uint16)libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x);
 			//set the carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -753,7 +755,7 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=3;
 			break;
 		case 0xd9://absolute,y
-			result=cpu->a-libbase::read(readaddr(mem,cpu->pc+1)+cpu->y);
+			result=(uint16)cpu->a-(uint16)libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->y);
 			//set the carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -764,7 +766,7 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=3;
 			break;
 		case 0xc1://indirect+xoff
-			result=cpu->a-libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)+cpu->x));
+			result=(uint16)cpu->a-(uint16)libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)+cpu->x));
 			//set the carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -775,7 +777,7 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xd1://indirect+y
-			result=cpu->a-libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)))+cpu->y;
+			result=(uint16)cpu->a-(uint16)libbase::read(mem,readaddr(mem, libbase::read(mem,cpu->pc+1)))+(uint16)cpu->y;
 			//set the carry bit
 			if (result|0b100000000) {
 				cpu->sr|=cbit;
@@ -789,11 +791,12 @@ void cmp(int8 *mem, libbase::cpustruct* cpu) {
 }
 
 void cpx(int8 *mem, libbase::cpustruct* cpu) {
+	uint16 result;
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xe0://immidiate
-			result=cpu->x-libbase::read(mem,cpu->pc+1);
+			result=(uint16)cpu->x-(uint16)libbase::read(mem,cpu->pc+1);
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -802,9 +805,9 @@ void cpx(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xe4://zpg
-			result=cpu->x-libbase::read(libbase::read(mem,cpu->pc+1));
+			result=(uint16)cpu->x-(uint16)libbase::read(mem, libbase::read(mem,cpu->pc+1));
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -813,9 +816,9 @@ void cpx(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xec://absolute
-			result=cpu->x-libbase::read(readaddr(mem,cpu->pc+1));
+			result=(uint16)cpu->x-(uint16)libbase::read(mem, readaddr(mem,cpu->pc+1));
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -827,11 +830,12 @@ void cpx(int8 *mem, libbase::cpustruct* cpu) {
 }
 
 void cpy(int8 *mem, libbase::cpustruct* cpu) {
+	uint16 result;
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xc0://immidiate
-			result=cpu->y-libbase::read(mem,cpu->pc+1);
+			result=(uint16)cpu->y-(uint16)libbase::read(mem,cpu->pc+1);
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -840,9 +844,9 @@ void cpy(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xc4://zpg
-			result=cpu->y-libbase::read(libbase::read(mem,cpu->pc+1));
+			result=(uint16)cpu->y-(uint16)libbase::read(mem, libbase::read(mem,cpu->pc+1));
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -851,9 +855,9 @@ void cpy(int8 *mem, libbase::cpustruct* cpu) {
 			cpu->pc+=2;
 			break;
 		case 0xcc://absolute
-			result=cpu->y-libbase::read(mem, readaddr(mem,cpu->pc+1));
+			result=(uint16)cpu->y-(uint16)libbase::read(mem, readaddr(mem,cpu->pc+1));
 			//set the carry bit
-			if (result|0b100000000) {
+			if (result|0b1111111100000000) {
 				cpu->sr|=cbit;
 			} else {
 				cpu->sr&=~cbit;
@@ -865,35 +869,36 @@ void cpy(int8 *mem, libbase::cpustruct* cpu) {
 }
 
 void dec(int8 *mem, libbase::cpustruct* cpu) {
+	int8 num,addr,result;
 	switch (libbase::read(mem,cpu->pc)) {
 		case 0xc6://zpg
-			int8 num = libbase::read(libbase::read(mem,cpu->pc+1));
-			int8 addr = libbase::read(mem,cpu->pc+1);
-			int8 result = num-1;
+			num = libbase::read(mem, libbase::read(mem,cpu->pc+1));
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num-1;
 			libbase::write(mem,addr,result);
 			setsrbits(cpu,num,result,nbit|zbit);
 			cpu->pc+=2;
 			break;
 		case 0xd6://zpg,x
-			int8 num = libbase::read(libbase::read(mem,cpu->pc+1)+cpu->x);
-			int8 addr = libbase::read(mem,cpu->pc+1);
-			int8 result = num-1;
+			num = libbase::read(mem, libbase::read(mem,cpu->pc+1)+cpu->x);
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num-1;
 			libbase::write(mem,addr,result);
 			setsrbits(cpu,num,result,nbit|zbit);
 			cpu->pc+=2;
 			break;
 		case 0xce://abs
-			int8 num = libbase::read(readaddr(mem,cpu->pc+1));
-			int8 addr = libbase::read(mem,cpu->pc+1);
-			int8 result = num-1;
+			num = libbase::read(mem, readaddr(mem,cpu->pc+1));
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num-1;
 			libbase::write(mem,addr,result);
 			setsrbits(cpu,num,result,nbit|zbit);
 			cpu->pc+=3;
 			break;
 		case 0xde://abs,x
-			int8 num = libbase::read(readaddr(mem,cpu->pc+1)+cpu->x);
-			int8 addr = libbase::read(mem,cpu->pc+1);
-			int8 result = num-1;
+			num = libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x);
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num-1;
 			libbase::write(mem,addr,result);
 			setsrbits(cpu,num,result,nbit|zbit);
 			cpu->pc+=3;
@@ -919,10 +924,98 @@ void dey(int8 *mem, libbase::cpustruct* cpu) {
 	}
 }
 
+void eor(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0x49://imm
+			cpu->a^=libbase::read(mem,cpu->pc+1);
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x45://zpg
+			cpu->a^=libbase::read(mem, libbase::read(mem,cpu->pc+1));
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x55://zpg,x
+			cpu->a^=libbase::read(mem, libbase::read(mem,cpu->pc+1)+cpu->x);
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x4d://abs
+			cpu->a^=libbase::read(mem, readaddr(mem,cpu->pc+1));
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x5d://abs,x
+			cpu->a^=libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x);
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x59://abs,t
+			cpu->a^=libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->y);
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x41://indirect+xoff
+			cpu->a^=libbase::read(mem, readaddr(mem,libbase::read(mem,cpu->pc+1)+cpu->x));
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+		case 0x51://indirect+y
+			cpu->a^=libbase::read(mem, readaddr(mem,libbase::read(mem,cpu->pc+1)))+cpu->y;
+			setsrbits(cpu,0,cpu->a,nbit|zbit);
+			cpu->pc+=2;
+	}
+}
 
+void inc(int8 *mem, libbase::cpustruct* cpu) {
+	int8 num,addr,result;
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xe6://zpg
+			num = libbase::read(mem, libbase::read(mem,cpu->pc+1));
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num+1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xf6://zpg,x
+			num = libbase::read(mem, libbase::read(mem,cpu->pc+1)+cpu->x);
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num+1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=2;
+			break;
+		case 0xee://abs
+			num = libbase::read(mem, readaddr(mem,cpu->pc+1));
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num+1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+		case 0xfe://abs,x
+			num = libbase::read(mem, readaddr(mem,cpu->pc+1)+cpu->x);
+			addr = libbase::read(mem,cpu->pc+1);
+			result = num+1;
+			libbase::write(mem,addr,result);
+			setsrbits(cpu,num,result,nbit|zbit);
+			cpu->pc+=3;
+			break;
+	}
+}
 
+void inx(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xe8://implied
+			cpu->x++;
+			setsrbits(cpu,0,cpu->x,nbit|zbit);
+			cpu->pc+=1;
+	}
+}
 
-
+void iny(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0xc8://implied
+			cpu->y++;
+			setsrbits(cpu,0,cpu->y,nbit|zbit);
+			cpu->pc+=1;
+	}
+}
 
 void jmp(int8 *mem, libbase::cpustruct* cpu) {
 	switch (libbase::read(mem,cpu->pc)){
@@ -934,6 +1027,17 @@ void jmp(int8 *mem, libbase::cpustruct* cpu) {
 			std::cout<<"jmp "<<readaddr(mem,readaddr(mem,cpu->pc+1))<<'\n';
 			//lda					arg pts to:	--------arg------------
 			loadaddrlittle(mem,cpu,readaddr(mem,cpu->pc+1));
+			break;
+	}
+}
+
+void jsr(int8 *mem, libbase::cpustruct* cpu) {
+	switch (libbase::read(mem,cpu->pc)) {
+		case 0x20:
+			pushpc(mem,cpu);
+			cpu->pc=0;
+			cpu->pc|=libbase::read(mem,cpu->pc+1);
+			cpu->pc|=(uint16)libbase::read(mem,cpu->pc+2)<<8;
 			break;
 	}
 }
@@ -982,7 +1086,6 @@ void lda(int8 *mem, libbase::cpustruct* cpu) {
 			break;
 	}
 }
-
 
 void ldx(int8 *mem, libbase::cpustruct* cpu) {
 	switch (libbase::read(mem,cpu->pc)) {
@@ -1033,6 +1136,17 @@ void ldy(int8 *mem, libbase::cpustruct* cpu) {
 			break;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void sta(int8 *mem, libbase::cpustruct* cpu) {
 	switch (libbase::read(mem,cpu->pc)) {
@@ -1119,18 +1233,54 @@ void setins(libbase::Emulator* emu) {
 	emu->ins[0xca]=&dex;
 
 	emu->ins[0x88]=&dey;
+	
+	emu->ins[0x49]=&eor;
+	emu->ins[0x45]=&eor;
+	emu->ins[0x55]=&eor;
+	emu->ins[0x4d]=&eor;
+	emu->ins[0x5d]=&eor;
+	emu->ins[0x59]=&eor;
+	emu->ins[0x41]=&eor;
+	emu->ins[0x51]=&eor;
 
+	emu->ins[0xe6]=&inc;
+	emu->ins[0xf6]=&inc;
+	emu->ins[0xee]=&inc;
+	emu->ins[0xfe]=&inc;
 
+	emu->ins[0xe8]=&inx;
+
+	emu->ins[0xc8]=&iny;
+
+	emu->ins[0x4c]=&jmp;
+	emu->ins[0x6c]=&jmp;
+
+	emu->ins[0x20]=&jsr;
+
+	emu->ins[0xa9]=&lda;
+	emu->ins[0xa5]=&lda;
+	emu->ins[0xb5]=&lda;
+	emu->ins[0xad]=&lda;
+	emu->ins[0xbd]=&lda;
+	emu->ins[0xb9]=&lda;
+	emu->ins[0xa1]=&lda;
+	emu->ins[0xb1]=&lda;
+
+	emu->ins[0xa2]=&ldx;
+	emu->ins[0xa6]=&ldx;
+	emu->ins[0xb6]=&ldx;
+	emu->ins[0xae]=&ldx;
+	emu->ins[0xbe]=&ldx;
+
+	emu->ins[0xa0]=&ldy;
+	emu->ins[0xa4]=&ldy;
+	emu->ins[0xb4]=&ldy;
+	emu->ins[0xac]=&ldy;
+	emu->ins[0xbc]=&ldy;
 
 
 
 	emu->ins[0x02]=&hlt;
-	emu->ins[0x4c]=&jmp;
-	emu->ins[0x6c]=&jmp;
-	emu->ins[0xa9]=&lda;
-	emu->ins[0xa5]=&lda;
-	emu->ins[0xad]=&lda;
-	emu->ins[0xa2]=&ldx;
 	emu->ins[0x85]=&sta;
 	printf("ins dict at:%p\n",&emu->ins[0x00]);
 	printf("ins dict at:%p\n",&emu->ins[0xa9]);
