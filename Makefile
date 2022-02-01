@@ -1,34 +1,36 @@
-CXXFLAGS:=-I/Users/clentz/Downloads/MacOSX10.9.sdk/usr/include -I/Users/clentz/Library/Developer/CommandLineTools/usr/include -Iinclude
-LDFLAGS:=-L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/ -lSystem -L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/System -Wl,-no_pie
+# ifeq ($@, nes)
+	CXXFLAGS:=-I/Users/clentz/Downloads/MacOSX10.9.sdk/usr/include -I/Users/clentz/Library/Developer/CommandLineTools/usr/include -Iinclude
+	LDFLAGS:=-L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/ -lSystem -L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/System -Wl,-no_pie
+# endif
+SRC_DIR := /Users/clentz/bin/cpp/nes/6502/src
+OBJ_DIR := /Users/clentz/bin/cpp/nes/6502/obj
+BIN_DIR := /Users/clentz/bin/cpp/nes/6502/.
 
-SRC_DIR := src
-OBJ_DIR := obj
-BIN_DIR := .
-
-EXE := $(BIN_DIR)/nes
+EXE := /Users/clentz/bin/cpp/nes/6502/nes
 
 SRC := $(SRC_DIR)/nes.cpp:$(SRC_DIR)/libbase.cpp
 OBJ := $($(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 
+
 all: $(EXE)
 
-prg: prg.nes
-prg.nes: prg.o
-	ld65 --config nes.cfg -o prg.nes prg.o
+prg: prg.o
+	ld65 --config /Users/clentz/bin/cpp/nes/6502/nes.cfg -o /Users/clentz/bin/cpp/nes/6502/prg.nes /Users/clentz/bin/cpp/nes/6502/prg.o
+	rm /Users/clentz/bin/cpp/nes/6502/prg.o
 prg.o:
-	ca65 -o prg.o prg.s
+	ca65 --cpu 6502 -o /Users/clentz/bin/cpp/nes/6502/prg.o /Users/clentz/bin/cpp/nes/6502/prg.s
 
-$(EXE): $(OBJ_DIR) $(OBJ_DIR)/nes.o
+nes: $(OBJ_DIR) $(OBJ_DIR)/nes.o
 # 	echo clang++ $(LDFLAGS) $(OBJ) -o $@
-	clang++ $(LDFLAGS) $(OBJ_DIR)/nes.o -o nes
+	clang++ $(LDFLAGS) $(OBJ_DIR)/nes.o -o nes -Wunused-command-line-argument
 	$(make clean)
 
 $(OBJ_DIR)/nes.o: $(OBJ_DIR)/libbase.o
-	clang++ $(CXXFLAGS) $(CFLAGS) -c $(OBJ_DIR)/libbase.o $(SRC_DIR)/nes.cpp -o $(OBJ_DIR)/nes.o
+	clang++ $(CXXFLAGS) $(CFLAGS) -c $(OBJ_DIR)/libbase.o $(SRC_DIR)/nes.cpp -o $(OBJ_DIR)/nes.o -Wunused-command-line-argument
 
 $(OBJ_DIR)/libbase.o:
-	clang++ $(CXXFLAGS) $(LDFLAGS) -c $(SRC_DIR)/libbase.cpp -d obj -o $(OBJ_DIR)/libbase.o
+	clang++ $(CXXFLAGS) $(LDFLAGS) -Wall -c $(SRC_DIR)/libbase.cpp -d obj -o $(OBJ_DIR)/libbase.o
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@
@@ -40,11 +42,13 @@ clean:
 
 -include $(OBJ:.o=.d)
 
-# nes: nes.cpp
+
+#
+#nes.cpp:
 # 	clang++ ${CXXFLAGS} ${LDFLAGS} -c libbase.cpp -o libbase.o
 # 	clang++ ${CXXFLAGS} ${LDFLAGS} -o nes -Wexpansion-to-defined -v nes.cpp
 # lib:
 # 	clang++ ${CXXFLAGS} ${LDFLAGS} -c libbase.cpp -o libbase.o
-
+#
 # nesonly:
 # 	clang++ ${CXXFLAGS} ${LDFLAGS} -o nes -Wexpansion-to-defined -v nes.cpp
