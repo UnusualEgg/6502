@@ -1,6 +1,6 @@
 # ifeq ($@, nes)
-	CXXFLAGS:=-I/Users/clentz/Downloads/MacOSX10.9.sdk/usr/include -I/Users/clentz/Library/Developer/CommandLineTools/usr/include -Iinclude
-	LDFLAGS:=-L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/ -lSystem -L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/System -Wl,-no_pie
+	CFLAGS:="-I/Users/clentz/Downloads/MacOSX10.9.sdk/usr/include -I/Users/clentz/Library/Developer/CommandLineTools/usr/include -Iinclude"
+	LDFLAGS:="-L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/ -lSystem -L/Users/clentz/Downloads/MacOSX10.9.sdk/usr/lib/System -Wl,-no_pie"
 # endif
 SRC_DIR := /Users/clentz/bin/cpp/nes/6502/src
 OBJ_DIR := /Users/clentz/bin/cpp/nes/6502/obj

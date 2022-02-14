@@ -13,6 +13,7 @@ typedef unsigned short uint16;
 
 int main(int argc, char const *argv[])
 {
+	const char secret[] = "Your... MOTHER!";
 	//memory
 	int8 mem[0xffff];
 	int8 *ptr = &mem[0];
