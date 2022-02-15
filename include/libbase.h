@@ -1503,6 +1503,9 @@ void rts(int8 *mem, bool *rw, libbase::cpustruct* cpu) {
     }
 }
 
+void rts(int8 *mem, bool *rw, libbase::cpustruct* cpu) {
+    switch (libbase::read(mem, cpu->pc)) {
+
 
 
 void sei(int8 *mem, bool *rw, libbase::cpustruct* cpu) {

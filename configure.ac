@@ -1,0 +1,5 @@
+AC_INIT([nes], [0.1], [a])
+AM_INIT_AUTOMAKE
+AC_PROG_CPP
+AC_CONFIG_FILES([Makefile])
+AC_OUTPUT
