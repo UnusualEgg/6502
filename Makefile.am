@@ -1,3 +1,2 @@
-AUTOMAKE_OPTIONS = foreign
-bin_PROGRAMS = nes
-nes_SOURCES = main.c
+SUBDIRS = src
+dist_doc_DATA = README

@@ -1,4 +1,4 @@
-#include <limits>
+#include <climits>
 typedef unsigned char int8;
 typedef unsigned short uint16;
 
@@ -1502,9 +1502,9 @@ void rts(int8 *mem, bool *rw, libbase::cpustruct* cpu) {
             cpu->pc+=1;
     }
 }
-
-void rts(int8 *mem, bool *rw, libbase::cpustruct* cpu) {
-    switch (libbase::read(mem, cpu->pc)) {
+//
+//void rts(int8 *mem, bool *rw, libbase::cpustruct* cpu) {
+//    switch (libbase::read(mem, cpu->pc)) {
 
 
 

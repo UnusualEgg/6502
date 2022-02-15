@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cxxabi.h>
 #include <map>
-#include "libbase.h"
+#include <libbase.h>
 typedef unsigned char int8;
 typedef unsigned short uint16;
 #define printRegs std::cout<<"cpu axy sr:"<<(int)cpu.a<<' '<<(int)cpu.x<<' '<<(int)cpu.y<<' '<<(int)cpu.sr<<'\n'
@@ -70,8 +70,8 @@ int main(int argc, char const *argv[])
 	// }
     std::cout<<std::hex;
 
-	
-	libbase::cpustruct cpu;
+//    getSP;
+    libbase::cpustruct cpu;
 	libbase::Emulator emulator;
 
 	//check typeof(len)
