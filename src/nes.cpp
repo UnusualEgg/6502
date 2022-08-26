@@ -2,7 +2,11 @@
 #include <fstream>
 #include <cxxabi.h>
 #include <map>
-#include <libbase.h>
+#include <defs.hpp>
+#include <cpu.hpp>
+#include <memory.hpp>
+#include <Emulator.hpp>
+#include <instructions.hpp>
 typedef unsigned char int8;
 typedef unsigned short uint16;
 #define printRegs std::cout<<"cpu axy sr:"<<(int)cpu.a<<' '<<(int)cpu.x<<' '<<(int)cpu.y<<' '<<(int)cpu.sr<<'\n'
@@ -71,8 +75,8 @@ int main(int argc, char const *argv[])
     std::cout<<std::hex;
 
 //    getSP;
-    libbase::cpustruct cpu;
-	libbase::Emulator emulator;
+    cpustruct cpu;
+	Emulator emulator;
 
 	//check typeof(len)
 	char *name=abi::__cxa_demangle(typeid(pflen).name(), 0, 0, 0);
