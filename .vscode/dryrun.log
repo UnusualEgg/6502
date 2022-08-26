@@ -1,0 +1,26 @@
+make nes --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/funny-system/prg/6502'
+/usr/bin/cmake -S/home/funny-system/prg/6502 -B/home/funny-system/prg/6502 --check-build-system CMakeFiles/Makefile.cmake 0
+make -s -f CMakeFiles/Makefile2 nes
+make[1]: Entering directory '/home/funny-system/prg/6502'
+/usr/bin/cmake -S/home/funny-system/prg/6502 -B/home/funny-system/prg/6502 --check-build-system CMakeFiles/Makefile.cmake 0
+/usr/bin/cmake -E cmake_progress_start /home/funny-system/prg/6502/CMakeFiles 2
+make -s -f CMakeFiles/Makefile2 CMakeFiles/nes.dir/all
+make[2]: Entering directory '/home/funny-system/prg/6502'
+make -s -f CMakeFiles/nes.dir/build.make CMakeFiles/nes.dir/depend
+make[3]: Entering directory '/home/funny-system/prg/6502'
+cd /home/funny-system/prg/6502 && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /home/funny-system/prg/6502 /home/funny-system/prg/6502 /home/funny-system/prg/6502 /home/funny-system/prg/6502 /home/funny-system/prg/6502/CMakeFiles/nes.dir/DependInfo.cmake --color=
+make[3]: Leaving directory '/home/funny-system/prg/6502'
+make -s -f CMakeFiles/nes.dir/build.make CMakeFiles/nes.dir/build
+make[3]: Entering directory '/home/funny-system/prg/6502'
+/usr/bin/cmake -E cmake_echo_color --switch= --green --progress-dir=/home/funny-system/prg/6502/CMakeFiles --progress-num=1 "Building CXX object CMakeFiles/nes.dir/src/nes.cpp.o"
+/usr/bin/c++ -DFMT_LOCALE -DFMT_SHARED -DSPDLOG_FMT_EXTERNAL -I/home/funny-system/prg/6502/include -std=gnu++11 -MD -MT CMakeFiles/nes.dir/src/nes.cpp.o -MF CMakeFiles/nes.dir/src/nes.cpp.o.d -o CMakeFiles/nes.dir/src/nes.cpp.o -c /home/funny-system/prg/6502/src/nes.cpp
+/usr/bin/cmake -E cmake_echo_color --switch= --green --bold --progress-dir=/home/funny-system/prg/6502/CMakeFiles --progress-num=2 "Linking CXX executable nes"
+/usr/bin/cmake -E cmake_link_script CMakeFiles/nes.dir/link.txt --verbose=
+make[3]: Leaving directory '/home/funny-system/prg/6502'
+/usr/bin/cmake -E cmake_echo_color --switch= --progress-dir=/home/funny-system/prg/6502/CMakeFiles --progress-num=1,2 "Built target nes"
+make[2]: Leaving directory '/home/funny-system/prg/6502'
+/usr/bin/cmake -E cmake_progress_start /home/funny-system/prg/6502/CMakeFiles 0
+make[1]: Leaving directory '/home/funny-system/prg/6502'
+make: Leaving directory '/home/funny-system/prg/6502'
+ 

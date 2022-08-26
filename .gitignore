@@ -32,5 +32,8 @@
 *.app
 nes
 prg.bin
-./nes.cpp
-options.json
+
+CMakeFiles
+bin
+build
+Makefile

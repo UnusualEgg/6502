@@ -1,0 +1,14 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "files.associations": {
+        "iostream": "cpp"
+    },
+    "C_Cpp.errorSquiggles": "Enabled",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/funny-system/prg/6502",
+            "binaryPath": "/home/funny-system/prg/6502/nes",
+            "binaryArgs": []
+        }
+    ]
+}
