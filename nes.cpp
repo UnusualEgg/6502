@@ -2,11 +2,10 @@
 #include <fstream>
 #include <cxxabi.h>
 #include <map>
-#include <defs.hpp>
-#include <cpu.hpp>
-#include <memory.hpp>
-#include <Emulator.hpp>
-#include <instructions.hpp>
+#include "include/cpu.hpp"
+#include "include/memory.hpp"
+#include "include/Emulator.hpp"
+#include "include/instructions.hpp"
 typedef unsigned char int8;
 typedef unsigned short uint16;
 #define printRegs std::cout<<"cpu axy sr:"<<(int)cpu.a<<' '<<(int)cpu.x<<' '<<(int)cpu.y<<' '<<(int)cpu.sr<<'\n'
@@ -36,14 +35,14 @@ int main(int argc, char const *argv[])
 
 	//find length of prg and read prg
 	std::streampos pflen;
-	std::ifstream pf("prg.nes", std::ifstream::binary);
+	std::ifstream pf("prg.bin", std::ifstream::binary);
 	pflen = pf.tellg(); //begining
 	pf.seekg(0, std::ios::end);
 	pflen = pf.tellg()-pflen; //end-begining
 	if (pf.good()){
 		std::cout<<"good!\n";
 
-	pf.seekg(16);
+	pf.seekg(0);
 	char prg[(int)pflen];
 	pf.read(&prg[0],pflen);
 	pf.close();

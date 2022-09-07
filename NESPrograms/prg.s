@@ -19,7 +19,7 @@ jmp vblank
 ;gawrrr
 
 resethandler:
-    lda #$08
+    lda #$09
     jsr addtwo
     .byte HLT
 

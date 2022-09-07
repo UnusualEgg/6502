@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 26 13:49:00 2022
+# Make data base, printed on Tue Sep  6 18:14:38 2022
 
 # Variables
 
@@ -23,7 +23,7 @@ SNAP_INSTANCE_KEY =
 # environment
 GJS_DEBUG_OUTPUT = stderr
 # environment
-VSCODE_CWD = /home/funny-system
+VSCODE_CWD = /home/luna
 # default
 MAKE_COMMAND := make
 # environment
@@ -33,13 +33,13 @@ QT_ACCESSIBILITY = 1
 # environment
 SNAP_INSTANCE_NAME = code
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/105/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/106/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
 # environment
-PWD = /home/funny-system/prg/6502
+PWD = /home/luna/prg/6502
 # automatic
 %D = $(patsubst %/,%,$(dir $%))
 # environment
@@ -49,11 +49,11 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/funny-system/.config/Code/CachedData/e4503b30fc78200f846c62cf8091b76ff5547662
+VSCODE_CODE_CACHE_PATH = /home/luna/.config/Code/CachedData/784b0177c56c607789f9638da7b6bf3230d47a8c
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.PIR6Q1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.DXUAS1
 # default
 .LOADED := 
 # default
@@ -63,9 +63,9 @@ CMAKE_COMMAND = /usr/bin/cmake
 # makefile
 MAKEFLAGS = pqrR
 # makefile
-CURDIR := /home/funny-system/prg/6502
+CURDIR := /home/luna/prg/6502
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # automatic
@@ -93,7 +93,7 @@ SNAP_REEXEC =
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 60204
+VSCODE_PID = 5944
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -103,7 +103,7 @@ BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile (from 'Makefile', line 60)
 CMAKE_SOURCE_DIR = /home/funny-system/prg/6502
 # environment
-SESSION_MANAGER = local/lunas-ubuntu:@/tmp/.ICE-unix/1874,unix/lunas-ubuntu:/tmp/.ICE-unix/1874
+SESSION_MANAGER = local/lunas-ubuntu:@/tmp/.ICE-unix/1997,unix/lunas-ubuntu:/tmp/.ICE-unix/1997
 # automatic
 *F = $(notdir $*)
 # environment
@@ -137,21 +137,21 @@ MAKE = $(MAKE_COMMAND)
 # environment
 SNAP_COOKIE = Tw-aryyz9_XXTev_HCtb5NBw5xZBZopAI0xqG59xG7stFneu6uY4
 # environment
-PATH = /home/funny-system/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+PATH = /home/luna/.local/bin:/home/luna/bin:/home/luna/bin:/home/luna/.cargo/bin:/home/luna/.local/bin:/home/luna/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
 # default
 MAKEFILES := 
 # automatic
 ^F = $(notdir $^)
 # environment
-SNAP_USER_COMMON = /home/funny-system/snap/code/common
+SNAP_USER_COMMON = /home/luna/snap/code/common
 # environment
-SNAP = /snap/code/105
+SNAP = /snap/code/106
 # environment
-INVOCATION_ID = 45de865c27934ec690585537c582a738
+INVOCATION_ID = 2a3343de7e9f4621bae9d9efa8a6e3d6
 # environment
-SNAP_REVISION = 105
+SNAP_REVISION = 106
 # environment
-SNAP_REAL_HOME = /home/funny-system
+SNAP_REAL_HOME = /home/luna
 # environment
 USERNAME = luna
 # environment
@@ -183,7 +183,7 @@ SNAP_ARCH = amd64
 # makefile
 .DEFAULT_GOAL := default_target
 # environment
-SYSTEMD_EXEC_PID = 1906
+SYSTEMD_EXEC_PID = 2030
 # makefile (from 'Makefile', line 54)
 RM = /usr/bin/cmake -E rm -f
 # environment
@@ -195,41 +195,39 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-DISABLE_WAYLAND = 1
-# environment
-SNAP_DATA = /var/snap/code/105
+SNAP_DATA = /var/snap/code/106
 # environment
 SNAP_CONTEXT = Tw-aryyz9_XXTev_HCtb5NBw5xZBZopAI0xqG59xG7stFneu6uY4
 # environment
-MANAGERPID = 1730
+MANAGERPID = 1848
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 60161
+GIO_LAUNCHED_DESKTOP_FILE_PID = 5903
 # makefile (from 'Makefile', line 35)
 MAKESILENT = -s
 # environment
-_ = /snap/code/105/usr/share/code/code
+_ = /snap/code/106/usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
-GDK_PIXBUF_MODULE_FILE = /home/funny-system/snap/code/common/.cache/gdk-pixbuf-loaders.cache
+GDK_PIXBUF_MODULE_FILE = /home/luna/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-JOURNAL_STREAM = 8:37140
+JOURNAL_STREAM = 8:36393
 # environment
 XDG_SESSION_CLASS = user
 # environment
 VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
 # environment
-HOME = /home/funny-system
+HOME = /home/luna
 # environment
 QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-2d6f73d5-1.70.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-5f01da26-1.71.0-main.sock
 # environment
 SNAP_NAME = code
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/105/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/106/usr/share/glib-2.0/schemas
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -237,7 +235,7 @@ IM_CONFIG_PHASE = 1
 # automatic
 <F = $(notdir $<)
 # environment
-SNAP_VERSION = e4503b30
+SNAP_VERSION = 784b0177
 # default
 SUFFIXES := 
 # environment
@@ -249,7 +247,7 @@ SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
 # environment
-SNAP_USER_DATA = /home/funny-system/snap/code/105
+SNAP_USER_DATA = /home/luna/snap/code/106
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -257,7 +255,7 @@ GDMSESSION = ubuntu
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # variable set hash-table stats:
-# Load=123/1024=12%, Rehash=0, Collisions=4/162=2%
+# Load=122/1024=12%, Rehash=0, Collisions=4/161=2%
 
 # Pattern-specific Variable Values
 
@@ -279,13 +277,13 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 %: RCS/%,v
 
- 
 %: SCCS/s.%
 
 %: s.%
 
 %.hpux_make_needs_suffix_list:
 
+ 
 # 6 implicit rules, 0 (0.0%) terminal.
 # Files
 
@@ -533,12 +531,12 @@ src/nes.cpp.i:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 58 / storage = 591 B / avg = 10 B
-# current buf: size = 8162 B / used = 591 B / count = 58 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 58 / storage = 596 B / avg = 10 B
+# current buf: size = 8162 B / used = 596 B / count = 58 / avg = 10 B
 
 # strcache performance: lookups = 171 / hit rate = 66%
 # hash-table stats:
 # Load=58/8192=1%, Rehash=0, Collisions=0/171=0%
-# Finished Make data base on Fri Aug 26 13:49:00 2022
+# Finished Make data base on Tue Sep  6 18:14:38 2022
 
  

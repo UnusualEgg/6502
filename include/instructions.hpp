@@ -1,6 +1,6 @@
 #include <climits>
-#include <defs.hpp>
-#include <Emulator.hpp>
+#include "defs.hpp"
+#include "Emulator.hpp"
 
 using spdlog::debug;
 using spdlog::info;
@@ -30,7 +30,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->a = (int8)result;
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit | vbit);
 		cpu->pc += 2;
-		debug("adc {}\n", (int)cpu->a);
+		debug((int)cpu->a);
 		break;
 	case 0x65: // zpg
 		result = (int)cpu->a + (int)read(mem, read(mem, cpu->pc + 1)) + (int)(cpu->sr & 0b01);
@@ -988,10 +988,14 @@ void jmp(int8 *mem, bool *rw, cpustruct *cpu)
 	{
 	case 0x4c: // absolute
 		loadaddrlittle(mem, cpu, cpu->pc + 1);
-		debug("jmp {}\n",(int)cpu->pc);
+		debug("jmp ");
+		debug((int)cpu->pc);
+		debug("\n");
 		break;
 	case 0x6c: // indirect
-		debug("jmp {}\n",readaddr(mem, readaddr(mem, cpu->pc + 1)));
+		debug("jmp ");
+		debug(readaddr(mem, readaddr(mem, cpu->pc + 1)));
+		debug("\n");
 		// lda					arg pts to:	--------arg------------
 		loadaddrlittle(mem, cpu, readaddr(mem, cpu->pc + 1));
 		break;
@@ -1004,7 +1008,11 @@ void jsr(int8 *mem, bool *rw, cpustruct *cpu)
 	{
 	case 0x20:
 		pushpc(mem, rw, cpu, +2);
-		debug("[jsr] {} pc:{}\n", readaddr(mem, cpu->pc + 1), cpu->pc);
+		debug("[jsr] ");
+		debug(readaddr(mem, cpu->pc + 1));
+		debug("pc:");
+		debug(cpu->pc);
+		debug("\n");
 		loadaddrlittle(mem, cpu, cpu->pc + 1);
 		break;
 	}
@@ -1016,7 +1024,10 @@ void lda(int8 *mem, bool *rw, cpustruct *cpu)
 	{
 	case 0xa9: // imm
 		cpu->a = read(mem, cpu->pc + 1);
-		debug("load {} in a:{}",(int)read(mem, cpu->pc + 1), (int)cpu->a);
+		debug("load ");
+		debug((int)read(mem, cpu->pc + 1));
+		debug(" in a:");
+		debug((int)cpu->a);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
@@ -1133,17 +1144,24 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 		if ((cpu->a & 1) != 0)
 		{
 			cpu->sr |= cbit;
-			debug("set SR:{}\n", (int)cpu->sr);
+			debug("set SR:");
+			debug((int)cpu->sr);
+			debug("\n");
 		}
 		else
 		{
 			cpu->sr &= invcbit; // set cbit 0
-			debug("set SR:{}\n", (int)cpu->sr);
+			cpu->sr |= cbit;
+			debug("set SR:");
+			debug((int)cpu->sr);
+			debug("\n");
 		}
 		cpu->a = (int8)result;
 		setsrbits(cpu, 0, cpu->a, zbit);
 		cpu->sr &= invnbit; // set nbit 0
-		debug("set SR:{}\n",(int)CHAR_MIN);
+		debug("set SR:");
+		debug((int)CHAR_MIN);
+		debug("\n");
 		cpu->pc += 1;
 		break;
 	case 0x46: // zpg
@@ -1298,7 +1316,11 @@ void pla(int8 *mem, bool *rw, cpustruct *cpu)
 	switch (read(mem, cpu->pc))
 	{
 	case 0x68: // implied
-		debug("[pla] SP:{}, pointing to {}\n",(int)getSP(cpu), (int)read(mem, getSP(cpu) + 1));
+		debug("[pla] SP:");
+		debug((int)getSP(cpu));
+		debug(", pointing to ");
+		debug((int)read(mem, getSP(cpu) + 1));
+		debug("\n");
 		pla(mem, cpu);
 		printStack
 			cpu->pc += 1;
@@ -1535,9 +1557,14 @@ void sta(int8 *mem, bool *rw, cpustruct *cpu)
 	switch (read(mem, cpu->pc))
 	{
 	case 0x85:
-		debug("sta:{} at {}... ", (int)cpu->a, (int)read(mem, cpu->pc + 1));
+		debug("sta:");
+		debug((int)cpu->a);
+		debug(" at ");
+		debug((int)read(mem, cpu->pc + 1));
+		debug("... ");
 		write(mem, rw, read(mem, cpu->pc + 1), cpu->a);
-		debug("{}\n",(int)read(mem, read(mem, cpu->pc + 1)));
+		debug((int)read(mem, read(mem, cpu->pc + 1)));
+		debug("\n");
 		cpu->pc += 2;
 		break;
 	}
@@ -1715,12 +1742,6 @@ void setins(Emulator *emu)
 
 	emu->ins[0x02] = &hlt;
 	emu->ins[0x85] = &sta;
-	printf("ins dict at:%p\n", &emu->ins[0x00]);
-	printf("ins dict at:%p\n", &emu->ins[0xa9]);
-	printf("ins dict at:%p\n", &emu->ins[0x4c]);
-	printf("ins dict at:%p\n", &emu->ins[0x69]);
-	printf("ins dict at:%p\n", &emu->ins[0x6c]);
-	printf("brk:%p\njmp:%p\nlda:%p\n", BRK, jmp, lda);
 }
 
 /*

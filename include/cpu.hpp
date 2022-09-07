@@ -1,3 +1,25 @@
+#pragma once
+
+typedef unsigned char int8;
+typedef unsigned short uint16;
+
+
+
+// sign of number (+ or -)
+const int8 sign = 0b10000000;
+const int8 nbit = 0b10000000; // negative
+const int8 vbit = 0b01000000; // overflow
+const int8 bbit = 0b00010000; // break
+const int8 dbit = 0b00001000; // decimal idk
+const int8 ibit = 0b00000100; // interrupt(irq disable)
+const int8 zbit = 0b00000010; // zero
+const int8 cbit = 0b00000001; // carry
+
+#define chall (int8)0xff;
+#define invnbit (int8)(nbit ^ chall);
+#define invcbit (int8)(cbit ^ chall);
+#define invzbit (int8)(zbit ^ chall);
+
 struct cpustruct;
 
 void pha(int8 *mem, bool *rw, cpustruct *cpu);
@@ -20,8 +42,6 @@ void loadaddrbig(int8 *mem, cpustruct *cpu, uint16 addr);
 
 
 
-#ifndef __CPU
-#define __CPU
 //----------------------------CPU-------------------------
 struct cpustruct
 {
@@ -34,8 +54,7 @@ struct cpustruct
     int8 sp;
 };
 
-uint16 getSP(cpustruct *cpu)
-{
+uint16 getSP(cpustruct *cpu) {
     return (uint16)cpu->sp + 0x0100; // page 1
 }
 
@@ -139,4 +158,3 @@ void setsrbits(cpustruct *cpu, int8 tmp, int8 result, int8 mask)
 	cpu->sr |= tmpsr;
 	cpu->sr &= ~off;
 } // This function does NOT set the carry bit!
-#endif

@@ -1,5 +1,11 @@
-#include <memory.hpp>
-#include <cpu.hpp>
+#include "cpu.hpp"
+#include "memory.hpp"
+
+typedef unsigned char int8;
+typedef unsigned short uint16;
+
+#define printRegs std::cout<<"cpu axy sr:"<<(int)cpu.a<<' '<<(int)cpu.x<<' '<<(int)cpu.y<<' '<<(int)cpu.sr<<'\n'
+
 
 #ifndef __Emulator
 #define __Emulator
@@ -37,10 +43,11 @@ void Emulator::RESET(int8 *mem, bool *rw, cpustruct *cpu)
     //  uint16 start=((uint16)read(mem,0xfffc))<<8;
     //  start+=((uint16)read(mem,0xfffd));
     //  cpu->pc=start;
+
     loadaddrlittle(mem, cpu, 0xfffc);
-    std::cout << "start address=" << cpu->pc << ' ' << (int)mem[0xfffc] << std::endl;
+    std::cout << "start address=" << cpu->pc << ' ' << (int)mem[0xfffc] << " um " << (int)mem[0xfffd] << std::endl;
     execute(mem, rw, cpu);
-}
+};
 
 int Emulator::execute(int8 *mem, bool *rw, cpustruct *cpu)
 {

@@ -9,5 +9,5 @@ endif()
 
 
 include_directories(include)
-add_executable(nes ${PROJECT_SOURCE_DIR}/src/nes.cpp)
+add_executable(nes ${PROJECT_SOURCE_DIR}/nes.cpp)
 target_link_libraries(nes PRIVATE spdlog::spdlog_header_only)

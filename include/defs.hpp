@@ -1,3 +1,5 @@
+#pragma once
+
 #include <spdlog/spdlog.h>
 typedef unsigned char int8;
 typedef unsigned short uint16;
@@ -7,9 +9,12 @@ typedef unsigned short uint16;
 	spdlog::debug("Printing stack:\n");                \
 	for (int i = 0x100; i <= 0x1ff; i++)       \
 	{                                          \
-		spdlog::debug("{}, ",(int)read(mem, i));       \
+		spdlog::debug((int)read(mem, i));       \
+		spdlog::debug(", ");       \
 	};                                         \
-	spdlog::debug("\b\b sp:{}\n", (int)cpu->sp);
+	spdlog::debug("\b\b sp:"); \
+	spdlog::debug((int)cpu->sp);\
+	spdlog::debug("\n");
 
 #define sign (int8)0b10000000 // sign of number (+ or -)
 #define nbit (int8)0b10000000 // negative
