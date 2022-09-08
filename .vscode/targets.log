@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Sep  6 18:14:38 2022
+# Make data base, printed on Wed Sep  7 16:02:16 2022
 
 # Variables
 
@@ -53,7 +53,7 @@ VSCODE_CODE_CACHE_PATH = /home/luna/.config/Code/CachedData/784b0177c56c607789f9
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.DXUAS1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.Q8YDS1
 # default
 .LOADED := 
 # default
@@ -93,7 +93,7 @@ SNAP_REEXEC =
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 5944
+VSCODE_PID = 5515
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -103,7 +103,7 @@ BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile (from 'Makefile', line 60)
 CMAKE_SOURCE_DIR = /home/funny-system/prg/6502
 # environment
-SESSION_MANAGER = local/lunas-ubuntu:@/tmp/.ICE-unix/1997,unix/lunas-ubuntu:/tmp/.ICE-unix/1997
+SESSION_MANAGER = local/lunas-ubuntu:@/tmp/.ICE-unix/2044,unix/lunas-ubuntu:/tmp/.ICE-unix/2044
 # automatic
 *F = $(notdir $*)
 # environment
@@ -147,7 +147,7 @@ SNAP_USER_COMMON = /home/luna/snap/code/common
 # environment
 SNAP = /snap/code/106
 # environment
-INVOCATION_ID = 2a3343de7e9f4621bae9d9efa8a6e3d6
+INVOCATION_ID = 26b0ed8dd84e4ccfaebd54b26f2e1c88
 # environment
 SNAP_REVISION = 106
 # environment
@@ -183,7 +183,7 @@ SNAP_ARCH = amd64
 # makefile
 .DEFAULT_GOAL := default_target
 # environment
-SYSTEMD_EXEC_PID = 2030
+SYSTEMD_EXEC_PID = 2071
 # makefile (from 'Makefile', line 54)
 RM = /usr/bin/cmake -E rm -f
 # environment
@@ -199,9 +199,9 @@ SNAP_DATA = /var/snap/code/106
 # environment
 SNAP_CONTEXT = Tw-aryyz9_XXTev_HCtb5NBw5xZBZopAI0xqG59xG7stFneu6uY4
 # environment
-MANAGERPID = 1848
+MANAGERPID = 1894
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 5903
+GIO_LAUNCHED_DESKTOP_FILE_PID = 5463
 # makefile (from 'Makefile', line 35)
 MAKESILENT = -s
 # environment
@@ -211,7 +211,7 @@ XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/luna/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-JOURNAL_STREAM = 8:36393
+JOURNAL_STREAM = 8:37192
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -537,6 +537,6 @@ src/nes.cpp.i:
 # strcache performance: lookups = 171 / hit rate = 66%
 # hash-table stats:
 # Load=58/8192=1%, Rehash=0, Collisions=0/171=0%
-# Finished Make data base on Tue Sep  6 18:14:38 2022
+# Finished Make data base on Wed Sep  7 16:02:16 2022
 
  

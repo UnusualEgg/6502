@@ -1,15 +1,23 @@
 ;C onstants
 HLT=$02
+INT_OUT=$4000
+CHAR_OUT=$4001
+STR_out=$4002
 
-.segment "HEADER"
-.byte "NES", $1a
-.byte 1 ; PRG-ROM pages (16kb)
-.byte $00 ; CHR-ROM pages (8kb)
+.segment "STARTUP"
+.org 0
+resethandler:
+    lda #$02
+    sta hm
+    jsr addtwo
 
-.segment "ZEROPAGE"
-idk: .byte $80
+    lda #$ab
+    sta INT_OUT
+hm:
+    .byte HLT
+    ; .byte HLT
+    ; .byte $02,$01
 
-.segment "CODE"
 addtwo:
 adc #$02
 rts
@@ -17,12 +25,6 @@ rts
 vblank:
 jmp vblank
 ;gawrrr
-
-resethandler:
-    lda #$09
-    jsr addtwo
-    .byte HLT
-
 
 
 .segment "VECTORS"

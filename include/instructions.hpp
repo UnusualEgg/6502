@@ -14,10 +14,10 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 tmp = cpu->a;
 	long result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x69: // immidiate
-		result = (int)cpu->a + (int)read(mem, cpu->pc + 1) + (int)(cpu->sr & cbit);
+		result = (int)cpu->a + (int)isn_read(mem, cpu->pc + 1) + (int)(cpu->sr & cbit);
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -30,10 +30,9 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->a = (int8)result;
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit | vbit);
 		cpu->pc += 2;
-		debug((int)cpu->a);
 		break;
 	case 0x65: // zpg
-		result = (int)cpu->a + (int)read(mem, read(mem, cpu->pc + 1)) + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)isn_read(mem, isn_read(mem, cpu->pc + 1)) + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -49,7 +48,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0x75: // zpg,x
-		result = (int)cpu->a + (int)read(mem, read(mem, cpu->pc + 1) + cpu->x) + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x) + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -65,7 +64,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0x6d: // absolute
-		result = (int)cpu->a + (int)read(mem, readaddr(mem, cpu->pc + 1)) + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)isn_read(mem, readaddr(mem, cpu->pc + 1)) + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -81,7 +80,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 3;
 		break;
 	case 0x7d: // absolute,x
-		result = (int)cpu->a + (int)read(mem, readaddr(mem, cpu->pc + 1) + cpu->x) + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x) + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -97,7 +96,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 3;
 		break;
 	case 0x79: // abs,y
-		result = (int)cpu->a + (int)read(mem, readaddr(mem, cpu->pc + 1) + cpu->y) + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y) + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b100000000)
 		{
@@ -114,7 +113,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		break;
 	case 0x61: // ind+offx
 		//						           -----pointing to      --------operand----
-		result = (int)cpu->a + (int)readaddr(mem, readaddr(mem, read(mem, cpu->pc + 1)) + cpu->x) + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)readaddr(mem, readaddr(mem, isn_read(mem, cpu->pc + 1)) + cpu->x) + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b100000000)
 		{
@@ -130,7 +129,7 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0x71: // ind+y
-		result = (int)cpu->a + (int)readaddr(mem, readaddr(mem, read(mem, cpu->pc + 1))) + (int)cpu->y + (int)(cpu->sr & 0b01);
+		result = (int)cpu->a + (int)readaddr(mem, readaddr(mem, isn_read(mem, cpu->pc + 1))) + (int)cpu->y + (int)(cpu->sr & 0b01);
 		// set carry bit
 		if (result & 0b100000000)
 		{
@@ -152,45 +151,45 @@ void adc(int8 *mem, bool *rw, cpustruct *cpu)
 void ins_and(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 tmp = cpu->a;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x29: // imm
-		cpu->a &= read(mem, cpu->pc);
+		cpu->a &= isn_read(mem, cpu->pc);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x25: // zpg
-		cpu->a &= read(mem, read(mem, cpu->pc + 1));
+		cpu->a &= isn_read(mem, isn_read(mem, cpu->pc + 1));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x35: // zpg,x
-		cpu->a &= read(mem, read(mem, cpu->pc + 1) + cpu->x);
+		cpu->a &= isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x2d: // abs
-		cpu->a &= read(mem, readaddr(mem, cpu->pc + 1));
+		cpu->a &= isn_read(mem, readaddr(mem, cpu->pc + 1));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0x3d: // abs,x
-		cpu->a &= read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		cpu->a &= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0x39: // abs,y
-		cpu->a &= read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
+		cpu->a &= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0x21: //(indirect,x)
-		cpu->a &= read(mem, readaddr(mem, read(mem, cpu->pc + 1) + cpu->x));
+		cpu->a &= isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1) + cpu->x));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x31: //(indirect),y
-		cpu->a &= read(mem, readaddr(mem, read(mem, cpu->pc + 1)));
+		cpu->a &= isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1)));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
@@ -202,7 +201,7 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 tmp;
 	int result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x0a: // accumulator
 		tmp = cpu->a;
@@ -222,8 +221,8 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 1;
 		break;
 	case 0x07: // zpg
-		tmp = read(mem, cpu->pc + 1);
-		result = (int)read(mem, cpu->pc + 1) << 1;
+		tmp = isn_read(mem, cpu->pc + 1);
+		result = (int)isn_read(mem, cpu->pc + 1) << 1;
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -233,12 +232,12 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= ~cbit;
 		}
-		write(mem, rw, tmp, (int8)result);
+		ins_write(mem, rw, tmp, (int8)result);
 		cpu->pc += 2;
 		break;
 	case 0x16: // zpg,x
-		tmp = read(mem, read(mem, cpu->pc + 1) + cpu->x);
-		result = read(mem, read(mem, cpu->pc + 1) + cpu->x) << 1;
+		tmp = isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
+		result = isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x) << 1;
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -248,12 +247,12 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= ~cbit;
 		}
-		write(mem, rw, tmp, (int8)result);
+		ins_write(mem, rw, tmp, (int8)result);
 		cpu->pc += 2;
 		break;
 	case 0x0e: // abs
-		tmp = read(mem, readaddr(mem, cpu->pc + 1));
-		result = read(mem, readaddr(mem, cpu->pc + 1)) << 1;
+		tmp = isn_read(mem, readaddr(mem, cpu->pc + 1));
+		result = isn_read(mem, readaddr(mem, cpu->pc + 1)) << 1;
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -263,12 +262,12 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= ~cbit;
 		}
-		write(mem, rw, tmp, (int8)result);
+		ins_write(mem, rw, tmp, (int8)result);
 		cpu->pc += 2;
 		break;
 	case 0x1e: // abs,x
-		tmp = read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
-		result = read(mem, readaddr(mem, cpu->pc + 1) + cpu->x) << 1;
+		tmp = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		result = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x) << 1;
 		// set carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -278,7 +277,7 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= ~cbit;
 		}
-		write(mem, rw, tmp, (int8)result);
+		ins_write(mem, rw, tmp, (int8)result);
 		cpu->pc += 2;
 		break;
 	}
@@ -286,12 +285,12 @@ void asl(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bcc(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on carry clear
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x90: // relative
 		if ((cpu->sr & cbit) == 0)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -313,12 +312,12 @@ void bcc(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bcs(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on carry set
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xb0: // relative
 		if ((cpu->sr & cbit) == 1)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -340,12 +339,12 @@ void bcs(int8 *mem, bool *rw, cpustruct *cpu)
 
 void beq(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on equal zero
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xf0: // relative
 		if ((cpu->sr & zbit) == 1)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -368,10 +367,10 @@ void beq(int8 *mem, bool *rw, cpustruct *cpu)
 void bit(int8 *mem, bool *rw, cpustruct *cpu)
 { // Test Bits in Memory with Accumulator
 	int8 m;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x24: // zpg
-		m = read(mem, cpu->pc + 1);
+		m = isn_read(mem, cpu->pc + 1);
 		if ((m & nbit) != 0)
 		{
 			cpu->sr |= nbit;
@@ -391,7 +390,7 @@ void bit(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0x2c: // abs
-		m = read(mem, readaddr(mem, cpu->pc + 1));
+		m = isn_read(mem, readaddr(mem, cpu->pc + 1));
 		if ((m & nbit) != 0)
 		{
 			cpu->sr |= nbit;
@@ -415,12 +414,12 @@ void bit(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bmi(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on result minus
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x30: // relative
 		if ((cpu->sr & nbit) == 1)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -442,12 +441,12 @@ void bmi(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bne(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on result not zero
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x10: // relative
 		if ((cpu->sr & zbit) == 0)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -469,12 +468,12 @@ void bne(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bpl(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on result plus
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xd0: // relative
 		if ((cpu->sr & nbit) == 0)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -496,12 +495,12 @@ void bpl(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bvc(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on overflow clear
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x50: // relative
 		if ((cpu->sr & vbit) == 0)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -523,12 +522,12 @@ void bvc(int8 *mem, bool *rw, cpustruct *cpu)
 
 void bvs(int8 *mem, bool *rw, cpustruct *cpu)
 { // branch on overflow set
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x70: // relative
 		if ((cpu->sr & vbit) == 0)
 		{
-			int8 off = read(mem, cpu->pc + 1);
+			int8 off = isn_read(mem, cpu->pc + 1);
 			if ((off & 0b10000000) != 0)
 			{
 				// add1 then invert
@@ -550,7 +549,7 @@ void bvs(int8 *mem, bool *rw, cpustruct *cpu)
 
 void clc(int8 *mem, bool *rw, cpustruct *cpu)
 { // clear carry flag
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x18: // relative
 		cpu->sr &= ~cbit;
@@ -561,7 +560,7 @@ void clc(int8 *mem, bool *rw, cpustruct *cpu)
 
 void cld(int8 *mem, bool *rw, cpustruct *cpu)
 { // clear decimal flag
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xd8: // relative
 		cpu->sr &= ~dbit;
@@ -572,7 +571,7 @@ void cld(int8 *mem, bool *rw, cpustruct *cpu)
 
 void cli(int8 *mem, bool *rw, cpustruct *cpu)
 { // clear irq flag
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x58: // relative
 		cpu->sr &= ~ibit;
@@ -583,7 +582,7 @@ void cli(int8 *mem, bool *rw, cpustruct *cpu)
 
 void clv(int8 *mem, bool *rw, cpustruct *cpu)
 { // clear overflow flag
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x58: // relative
 		cpu->sr &= ~vbit;
@@ -595,10 +594,10 @@ void clv(int8 *mem, bool *rw, cpustruct *cpu)
 void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	uint16 result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xc9: // immidiate
-		result = (uint16)cpu->a - (uint16)read(mem, cpu->pc + 1);
+		result = (uint16)cpu->a - (uint16)isn_read(mem, cpu->pc + 1);
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -612,7 +611,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0xc5: // zpg
-		result = (uint16)cpu->a - (uint16)read(mem, read(mem, cpu->pc + 1));
+		result = (uint16)cpu->a - (uint16)isn_read(mem, isn_read(mem, cpu->pc + 1));
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -626,7 +625,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0xd5: // zpg,x
-		result = (uint16)cpu->a - (uint16)read(mem, read(mem, cpu->pc + 1) + cpu->x);
+		result = (uint16)cpu->a - (uint16)isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -640,7 +639,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0xcd: // absolute
-		result = (uint16)cpu->a - (uint16)read(mem, readaddr(mem, cpu->pc + 1));
+		result = (uint16)cpu->a - (uint16)isn_read(mem, readaddr(mem, cpu->pc + 1));
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -654,7 +653,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 3;
 		break;
 	case 0xdd: // absolute,x
-		result = (uint16)cpu->a - (uint16)read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		result = (uint16)cpu->a - (uint16)isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -668,7 +667,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 3;
 		break;
 	case 0xd9: // absolute,y
-		result = (uint16)cpu->a - (uint16)read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
+		result = (uint16)cpu->a - (uint16)isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -682,7 +681,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 3;
 		break;
 	case 0xc1: // indirect+xoff
-		result = (uint16)cpu->a - (uint16)read(mem, readaddr(mem, read(mem, cpu->pc + 1) + cpu->x));
+		result = (uint16)cpu->a - (uint16)isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1) + cpu->x));
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -696,7 +695,7 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0xd1: // indirect+y
-		result = (uint16)cpu->a - (uint16)read(mem, readaddr(mem, read(mem, cpu->pc + 1))) + (uint16)cpu->y;
+		result = (uint16)cpu->a - (uint16)isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1))) + (uint16)cpu->y;
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -715,10 +714,10 @@ void cmp(int8 *mem, bool *rw, cpustruct *cpu)
 void cpx(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	uint16 result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xe0: // immidiate
-		result = (uint16)cpu->x - (uint16)read(mem, cpu->pc + 1);
+		result = (uint16)cpu->x - (uint16)isn_read(mem, cpu->pc + 1);
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -732,7 +731,7 @@ void cpx(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0xe4: // zpg
-		result = (uint16)cpu->x - (uint16)read(mem, read(mem, cpu->pc + 1));
+		result = (uint16)cpu->x - (uint16)isn_read(mem, isn_read(mem, cpu->pc + 1));
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -746,7 +745,7 @@ void cpx(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 2;
 		break;
 	case 0xec: // absolute
-		result = (uint16)cpu->x - (uint16)read(mem, readaddr(mem, cpu->pc + 1));
+		result = (uint16)cpu->x - (uint16)isn_read(mem, readaddr(mem, cpu->pc + 1));
 		// set the carry bit
 		if (result & 0b1111111100000000)
 		{
@@ -765,10 +764,10 @@ void cpx(int8 *mem, bool *rw, cpustruct *cpu)
 void cpy(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	uint16 result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xc0: // immidiate
-		result = (uint16)cpu->y - (uint16)read(mem, cpu->pc + 1);
+		result = (uint16)cpu->y - (uint16)isn_read(mem, cpu->pc + 1);
 		// set the carry bit
 		if (result & 0b100000000)
 		{
@@ -776,7 +775,7 @@ void cpy(int8 *mem, bool *rw, cpustruct *cpu)
 			cpu->pc += 2;
 			break;
 		case 0xc4: // zpg
-			result = (uint16)cpu->y - (uint16)read(mem, read(mem, cpu->pc + 1));
+			result = (uint16)cpu->y - (uint16)isn_read(mem, isn_read(mem, cpu->pc + 1));
 			// set the carry bit
 			if (result & 0b1111111100000000)
 			{
@@ -790,7 +789,7 @@ void cpy(int8 *mem, bool *rw, cpustruct *cpu)
 			cpu->pc += 2;
 			break;
 		case 0xcc: // absolute
-			result = (uint16)cpu->y - (uint16)read(mem, readaddr(mem, cpu->pc + 1));
+			result = (uint16)cpu->y - (uint16)isn_read(mem, readaddr(mem, cpu->pc + 1));
 			// set the carry bit
 			if (result & 0b1111111100000000)
 			{
@@ -810,37 +809,37 @@ void cpy(int8 *mem, bool *rw, cpustruct *cpu)
 void dec(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 num, addr, result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xc6: // zpg
-		num = read(mem, read(mem, cpu->pc + 1));
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, isn_read(mem, cpu->pc + 1));
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num - 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xd6: // zpg,x
-		num = read(mem, read(mem, cpu->pc + 1) + cpu->x);
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num - 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xce: // abs
-		num = read(mem, readaddr(mem, cpu->pc + 1));
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, readaddr(mem, cpu->pc + 1));
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num - 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xde: // abs,x
-		num = read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num - 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 3;
 		break;
@@ -849,7 +848,7 @@ void dec(int8 *mem, bool *rw, cpustruct *cpu)
 
 void dex(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xca: // implied
 		cpu->x--;
@@ -861,7 +860,7 @@ void dex(int8 *mem, bool *rw, cpustruct *cpu)
 
 void dey(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x88: // implied
 		cpu->y--;
@@ -873,45 +872,45 @@ void dey(int8 *mem, bool *rw, cpustruct *cpu)
 
 void eor(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x49: // imm
-		cpu->a ^= read(mem, cpu->pc + 1);
+		cpu->a ^= isn_read(mem, cpu->pc + 1);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x45: // zpg
-		cpu->a ^= read(mem, read(mem, cpu->pc + 1));
+		cpu->a ^= isn_read(mem, isn_read(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x55: // zpg,x
-		cpu->a ^= read(mem, read(mem, cpu->pc + 1) + cpu->x);
+		cpu->a ^= isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x4d: // abs
-		cpu->a ^= read(mem, readaddr(mem, cpu->pc + 1));
+		cpu->a ^= isn_read(mem, readaddr(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x5d: // abs,x
-		cpu->a ^= read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		cpu->a ^= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x59: // abs,t
-		cpu->a ^= read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
+		cpu->a ^= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x41: // indirect+xoff
-		cpu->a ^= read(mem, readaddr(mem, read(mem, cpu->pc + 1) + cpu->x));
+		cpu->a ^= isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1) + cpu->x));
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x51: // indirect+y
-		cpu->a ^= read(mem, readaddr(mem, read(mem, cpu->pc + 1))) + cpu->y;
+		cpu->a ^= isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1))) + cpu->y;
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
@@ -921,37 +920,37 @@ void eor(int8 *mem, bool *rw, cpustruct *cpu)
 void inc(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 num, addr, result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xe6: // zpg
-		num = read(mem, read(mem, cpu->pc + 1));
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, isn_read(mem, cpu->pc + 1));
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num + 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xf6: // zpg,x
-		num = read(mem, read(mem, cpu->pc + 1) + cpu->x);
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num + 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xee: // abs
-		num = read(mem, readaddr(mem, cpu->pc + 1));
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, readaddr(mem, cpu->pc + 1));
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num + 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xfe: // abs,x
-		num = read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
-		addr = read(mem, cpu->pc + 1);
+		num = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		addr = isn_read(mem, cpu->pc + 1);
 		result = num + 1;
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		setsrbits(cpu, num, result, nbit | zbit);
 		cpu->pc += 3;
 		break;
@@ -960,7 +959,7 @@ void inc(int8 *mem, bool *rw, cpustruct *cpu)
 
 void inx(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xe8: // implied
 		cpu->x++;
@@ -972,7 +971,7 @@ void inx(int8 *mem, bool *rw, cpustruct *cpu)
 
 void iny(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xc8: // implied
 		cpu->y++;
@@ -984,7 +983,7 @@ void iny(int8 *mem, bool *rw, cpustruct *cpu)
 
 void jmp(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x4c: // absolute
 		loadaddrlittle(mem, cpu, cpu->pc + 1);
@@ -1004,15 +1003,11 @@ void jmp(int8 *mem, bool *rw, cpustruct *cpu)
 
 void jsr(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x20:
 		pushpc(mem, rw, cpu, +2);
-		debug("[jsr] ");
-		debug(readaddr(mem, cpu->pc + 1));
-		debug("pc:");
-		debug(cpu->pc);
-		debug("\n");
+		debug("[jsr] to {} pc:{}",readaddr(mem, cpu->pc + 1),cpu->pc);
 		loadaddrlittle(mem, cpu, cpu->pc + 1);
 		break;
 	}
@@ -1020,49 +1015,46 @@ void jsr(int8 *mem, bool *rw, cpustruct *cpu)
 
 void lda(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xa9: // imm
-		cpu->a = read(mem, cpu->pc + 1);
-		debug("load ");
-		debug((int)read(mem, cpu->pc + 1));
-		debug(" in a:");
-		debug((int)cpu->a);
+		cpu->a = isn_read(mem, cpu->pc + 1);
+		debug("load {} in a:{}",(int)isn_read(mem, cpu->pc + 1),(int)cpu->a);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xa5: // zpg
-		cpu->a = read(mem, read(mem, cpu->pc + 1));
+		cpu->a = isn_read(mem, isn_read(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xb5: // zpg,x
-		cpu->a += read(mem, cpu->pc + 1 + cpu->x);
+		cpu->a += isn_read(mem, cpu->pc + 1 + cpu->x);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xbd: // absolute
-		cpu->a = read(mem, readaddr(mem, cpu->pc + 1));
+		cpu->a = isn_read(mem, readaddr(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xb9: // absolute,x
-		cpu->a = read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		cpu->a = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xa1: // absolute,y
-		cpu->a = read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
+		cpu->a = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xb1: //(indirect,x)
-		cpu->a = read(mem, readaddr(mem, read(mem, cpu->pc + 1) + cpu->x));
+		cpu->a = isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1) + cpu->x));
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xad: //(indirect),y
-		cpu->a = read(mem, readaddr(mem, read(mem, cpu->pc + 1))) + cpu->y;
+		cpu->a = isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1))) + cpu->y;
 		setsrbits(cpu, 0, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
@@ -1071,30 +1063,30 @@ void lda(int8 *mem, bool *rw, cpustruct *cpu)
 
 void ldx(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xa2: // imm(byte)
-		cpu->x = read(mem, cpu->pc + 1);
+		cpu->x = isn_read(mem, cpu->pc + 1);
 		setsrbits(cpu, 0, cpu->x, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xa6: // zpg
-		cpu->x &= read(mem, read(mem, cpu->pc + 1));
+		cpu->x &= isn_read(mem, isn_read(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->x, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xb6: // zpg,y
-		cpu->x &= read(mem, read(mem, cpu->pc + 1) + cpu->y);
+		cpu->x &= isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->y);
 		setsrbits(cpu, 0, cpu->x, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xae: // abs
-		cpu->x &= read(mem, readaddr(mem, cpu->pc + 1));
+		cpu->x &= isn_read(mem, readaddr(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->x, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xbe: // abs,y
-		cpu->x &= read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
+		cpu->x &= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
 		setsrbits(cpu, 0, cpu->x, nbit | zbit);
 		cpu->pc += 3;
 		break;
@@ -1103,30 +1095,30 @@ void ldx(int8 *mem, bool *rw, cpustruct *cpu)
 
 void ldy(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xa0: // imm(byte)
-		cpu->y = read(mem, cpu->pc + 1);
+		cpu->y = isn_read(mem, cpu->pc + 1);
 		setsrbits(cpu, 0, cpu->y, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xa4: // zpg
-		cpu->y &= read(mem, read(mem, cpu->pc + 1));
+		cpu->y &= isn_read(mem, isn_read(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->y, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xb4: // zpg,x
-		cpu->y &= read(mem, read(mem, cpu->pc + 1) + cpu->x);
+		cpu->y &= isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, 0, cpu->y, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0xac: // abs
-		cpu->y &= read(mem, readaddr(mem, cpu->pc + 1));
+		cpu->y &= isn_read(mem, readaddr(mem, cpu->pc + 1));
 		setsrbits(cpu, 0, cpu->y, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0xbc: // abs,x
-		cpu->y &= read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		cpu->y &= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, 0, cpu->y, nbit | zbit);
 		cpu->pc += 3;
 		break;
@@ -1137,7 +1129,7 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 n;
 	uint16 result;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x4a: // accumulator
 		result = cpu->a >> 1;
@@ -1165,7 +1157,7 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 1;
 		break;
 	case 0x46: // zpg
-		n = read(mem, read(mem, cpu->pc + 1));
+		n = isn_read(mem, isn_read(mem, cpu->pc + 1));
 		result = n >> 1;
 		if (n & 1)
 		{
@@ -1177,11 +1169,11 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 		}
 		setsrbits(cpu, 0, result, zbit);
 		cpu->sr &= invnbit; // set nbit 0
-		write(mem, rw, read(mem, cpu->pc + 1), result);
+		ins_write(mem, rw, isn_read(mem, cpu->pc + 1), result);
 		cpu->pc += 2;
 		break;
 	case 0x56: // zpg,x
-		n = read(mem, read(mem, cpu->pc + 1) + cpu->x);
+		n = isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
 		result = n >> 1;
 		if (n & 1)
 		{
@@ -1193,11 +1185,11 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 		}
 		setsrbits(cpu, 0, result, zbit);
 		cpu->sr &= invnbit; // set nbit 0
-		write(mem, rw, read(mem, cpu->pc + 1), result);
+		ins_write(mem, rw, isn_read(mem, cpu->pc + 1), result);
 		cpu->pc += 2;
 		break;
 	case 0x4e: // abs
-		n = read(mem, readaddr(mem, cpu->pc + 1));
+		n = isn_read(mem, readaddr(mem, cpu->pc + 1));
 		result = n >> 1;
 		if (n & 1)
 		{
@@ -1209,11 +1201,11 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 		}
 		setsrbits(cpu, 0, result, zbit);
 		cpu->sr &= invnbit; // set nbit 0
-		write(mem, rw, read(mem, cpu->pc + 1), result);
+		ins_write(mem, rw, isn_read(mem, cpu->pc + 1), result);
 		cpu->pc += 3;
 		break;
 	case 0x5e: // abs,x
-		n = read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		n = isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		result = n >> 1;
 		if (n & 1)
 		{
@@ -1225,7 +1217,7 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 		}
 		setsrbits(cpu, 0, result, zbit);
 		cpu->sr &= invnbit; // set nbit 0
-		write(mem, rw, read(mem, cpu->pc + 1), result);
+		ins_write(mem, rw, isn_read(mem, cpu->pc + 1), result);
 		cpu->pc += 3;
 		break;
 	}
@@ -1233,7 +1225,7 @@ void lsr(int8 *mem, bool *rw, cpustruct *cpu)
 
 void nop(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0xea:
 		cpu->pc += 1;
@@ -1244,45 +1236,45 @@ void nop(int8 *mem, bool *rw, cpustruct *cpu)
 void ora(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	int8 tmp = cpu->a;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x09: // immediate
-		cpu->a |= read(mem, cpu->pc + 1);
+		cpu->a |= isn_read(mem, cpu->pc + 1);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x05: // zpg
-		cpu->a |= read(mem, read(mem, cpu->pc + 1));
+		cpu->a |= isn_read(mem, isn_read(mem, cpu->pc + 1));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x15: // zpg,x
-		cpu->a |= read(mem, read(mem, cpu->pc + 1) + cpu->x);
+		cpu->a |= isn_read(mem, isn_read(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x0d: // absolute
-		cpu->a |= read(mem, readaddr(mem, cpu->pc + 1));
+		cpu->a |= isn_read(mem, readaddr(mem, cpu->pc + 1));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0x1d: // absolute,x
-		cpu->a |= read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
+		cpu->a |= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->x);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0x19: // absolute,y
-		cpu->a |= read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
+		cpu->a |= isn_read(mem, readaddr(mem, cpu->pc + 1) + cpu->y);
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 3;
 		break;
 	case 0x01: // indirect+xoff
-		cpu->a |= read(mem, readaddr(mem, read(mem, cpu->pc + 1) + cpu->x));
+		cpu->a |= isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1) + cpu->x));
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
 	case 0x11: // indirect+y
-		cpu->a |= read(mem, readaddr(mem, read(mem, cpu->pc + 1))) + cpu->y;
+		cpu->a |= isn_read(mem, readaddr(mem, isn_read(mem, cpu->pc + 1))) + cpu->y;
 		setsrbits(cpu, tmp, cpu->a, nbit | zbit);
 		cpu->pc += 2;
 		break;
@@ -1291,7 +1283,7 @@ void ora(int8 *mem, bool *rw, cpustruct *cpu)
 
 void _pha(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x48: // implied
 		_pha(mem, rw, cpu);
@@ -1302,7 +1294,7 @@ void _pha(int8 *mem, bool *rw, cpustruct *cpu)
 
 void _php(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x08: // implied
 		_php(mem, rw, cpu);
@@ -1313,13 +1305,13 @@ void _php(int8 *mem, bool *rw, cpustruct *cpu)
 
 void pla(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x68: // implied
 		debug("[pla] SP:");
 		debug((int)getSP(cpu));
 		debug(", pointing to ");
-		debug((int)read(mem, getSP(cpu) + 1));
+		debug((int)isn_read(mem, getSP(cpu) + 1));
 		debug("\n");
 		pla(mem, cpu);
 		printStack
@@ -1330,7 +1322,7 @@ void pla(int8 *mem, bool *rw, cpustruct *cpu)
 
 void plp(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x28: // implied
 		plp(mem, cpu);
@@ -1344,7 +1336,7 @@ void rol(int8 *mem, bool *rw, cpustruct *cpu)
 	uint16 result;
 	uint16 addr;
 	int8 n;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x2a: // accumulator
 		result = cpu->a << 1;
@@ -1361,8 +1353,8 @@ void rol(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 1;
 		break;
 	case 0x26: // zpg
-		addr = read(mem, cpu->pc + 1);
-		n = read(mem, addr);
+		addr = isn_read(mem, cpu->pc + 1);
+		n = isn_read(mem, addr);
 		result = n << 1;
 		result |= cpu->sr & cbit;
 		if (n & 0x80)
@@ -1373,12 +1365,12 @@ void rol(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, (int8)result);
+		ins_write(mem, rw, addr, (int8)result);
 		cpu->pc += 2;
 		break;
 	case 0x36: // zpg,x
-		addr = read(mem, cpu->pc + 1) + cpu->x;
-		n = read(mem, addr);
+		addr = isn_read(mem, cpu->pc + 1) + cpu->x;
+		n = isn_read(mem, addr);
 		result = n << 1;
 		result |= cpu->sr & cbit;
 		if (n & 0x80)
@@ -1389,12 +1381,12 @@ void rol(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, (int8)result);
+		ins_write(mem, rw, addr, (int8)result);
 		cpu->pc += 2;
 		break;
 	case 0x2e: // absolute
 		addr = readaddr(mem, cpu->pc + 1);
-		n = read(mem, addr);
+		n = isn_read(mem, addr);
 		result = n << 1;
 		result |= cpu->sr & cbit;
 		if (n & 0x80)
@@ -1405,12 +1397,12 @@ void rol(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, (int8)result);
+		ins_write(mem, rw, addr, (int8)result);
 		cpu->pc += 3;
 		break;
 	case 0x3e: // absolute,x
 		addr = readaddr(mem, cpu->pc + 1) + cpu->x;
-		n = read(mem, addr);
+		n = isn_read(mem, addr);
 		result = n << 1;
 		result |= cpu->sr & cbit;
 		if (n & 0x80)
@@ -1421,7 +1413,7 @@ void rol(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, (int8)result);
+		ins_write(mem, rw, addr, (int8)result);
 		cpu->pc += 3;
 		break;
 	}
@@ -1432,7 +1424,7 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 	int8 result;
 	uint16 addr;
 	int8 n;
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x6a: // accumulator
 		result = cpu->a >> 1;
@@ -1449,8 +1441,8 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 		cpu->pc += 1;
 		break;
 	case 0x66: // zpg
-		addr = read(mem, cpu->pc + 1);
-		n = read(mem, addr);
+		addr = isn_read(mem, cpu->pc + 1);
+		n = isn_read(mem, addr);
 		result = n >> 1;
 		result |= (cpu->sr & cbit) << 7;
 		if (n & 0x01)
@@ -1461,12 +1453,12 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		cpu->pc += 2;
 		break;
 	case 0x76: // zpg,x
-		addr = read(mem, cpu->pc + 1) + cpu->x;
-		n = read(mem, addr);
+		addr = isn_read(mem, cpu->pc + 1) + cpu->x;
+		n = isn_read(mem, addr);
 		result = n >> 1;
 		result |= cpu->sr & cbit << 7;
 		if (n & 0x01)
@@ -1477,12 +1469,12 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		cpu->pc += 2;
 		break;
 	case 0x6e: // absolute
 		addr = readaddr(mem, cpu->pc + 1);
-		n = read(mem, addr);
+		n = isn_read(mem, addr);
 		result = n >> 1;
 		result |= cpu->sr & cbit << 7;
 		if (n & 0x01)
@@ -1493,12 +1485,12 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		cpu->pc += 3;
 		break;
 	case 0x7e: // absolute,x
 		addr = readaddr(mem, cpu->pc + 1) + cpu->x;
-		n = read(mem, addr);
+		n = isn_read(mem, addr);
 		result = n >> 1;
 		result |= cpu->sr & cbit << 7;
 		if (n & 0x01)
@@ -1509,7 +1501,7 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 		{
 			cpu->sr &= invcbit;
 		}
-		write(mem, rw, addr, result);
+		ins_write(mem, rw, addr, result);
 		cpu->pc += 3;
 		break;
 	}
@@ -1517,12 +1509,12 @@ void ror(int8 *mem, bool *rw, cpustruct *cpu)
 
 void rti(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x40: // implied
 		// pull sr from stack (ignore bit 5)
 		cpu->sr = 0;
-		cpu->sr |= read(mem, getSP(cpu)) & 0b11101111; // ignore 5th bit
+		cpu->sr |= isn_read(mem, getSP(cpu)) & 0b11101111; // ignore 5th bit
 		pullpc(mem, cpu);
 		break;
 	}
@@ -1530,7 +1522,7 @@ void rti(int8 *mem, bool *rw, cpustruct *cpu)
 
 void rts(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x60:
 		loadaddrlittle(mem, cpu, getSP(cpu));
@@ -1543,7 +1535,7 @@ void rts(int8 *mem, bool *rw, cpustruct *cpu)
 
 void sei(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
 	case 0x78:
 		cpu->sr |= ibit;
@@ -1554,26 +1546,26 @@ void sei(int8 *mem, bool *rw, cpustruct *cpu)
 
 void sta(int8 *mem, bool *rw, cpustruct *cpu)
 {
-	switch (read(mem, cpu->pc))
+	switch (isn_read(mem, cpu->pc))
 	{
-	case 0x85:
-		debug("sta:");
-		debug((int)cpu->a);
-		debug(" at ");
-		debug((int)read(mem, cpu->pc + 1));
-		debug("... ");
-		write(mem, rw, read(mem, cpu->pc + 1), cpu->a);
-		debug((int)read(mem, read(mem, cpu->pc + 1)));
-		debug("\n");
+	case 0x85://zpg
+		debug("sta:{} at {}...",(int)cpu->a, (int)isn_read(mem, cpu->pc + 1));
+		ins_write(mem, rw, isn_read(mem, cpu->pc + 1), cpu->a);
 		cpu->pc += 2;
 		break;
+	case 0x8d://abs
+		debug("sta:{} to {}", (int)cpu->a,(int)readaddr(mem,cpu->pc+1));
+		ins_write(mem, rw, readaddr(mem,cpu->pc+1),cpu->a);
+		cpu->pc += 3;
 	}
+
 }
 
 void hlt(int8 *mem, bool *rw, cpustruct *cpu)
 {
 	cpu->sp += 0;
 	info("HLT");
+	cpu->isHalted=true;
 }
 
 void setins(Emulator *emu)
@@ -1741,7 +1733,9 @@ void setins(Emulator *emu)
 	emu->ins[0x78] = &sei;
 
 	emu->ins[0x02] = &hlt;
+	
 	emu->ins[0x85] = &sta;
+	emu->ins[0x8d] = &sta;
 }
 
 /*

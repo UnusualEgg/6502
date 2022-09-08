@@ -28,7 +28,7 @@ public:
 
 void Emulator::RESET(int8 *mem, bool *rw, cpustruct *cpu)
 {
-    std::cout << "RESET\n";
+    spdlog::info("RESET");
     // reset registers
     cpu->a = 0;
     cpu->x = 0;
@@ -37,36 +37,29 @@ void Emulator::RESET(int8 *mem, bool *rw, cpustruct *cpu)
     cpu->sr = 0;
     cpu->sp = 0xff;
     cpu->bp = 0xff;
+    cpu->isHalted = false;
 
-    std::cout << "getting starting adress..." << std::endl;
-    // fffc fffd
-    //  uint16 start=((uint16)read(mem,0xfffc))<<8;
-    //  start+=((uint16)read(mem,0xfffd));
-    //  cpu->pc=start;
 
     loadaddrlittle(mem, cpu, 0xfffc);
-    std::cout << "start address=" << cpu->pc << ' ' << (int)mem[0xfffc] << " um " << (int)mem[0xfffd] << std::endl;
+    spdlog::info("start address={}",cpu->pc);
     execute(mem, rw, cpu);
 };
 
 int Emulator::execute(int8 *mem, bool *rw, cpustruct *cpu)
 {
-    std::cout << "execute\n";
+    spdlog::debug("execute");
     for (int cycle = 0; cycle < 1000; ++cycle)
     {
+        if (cpu->isHalted) {break;}
         // check if valid opcode
-        //        std::cout<<"[ins]"<<(long)ins[read(mem,cpu->pc)]<<" pc:"<<cpu->pc<<'\n';
-        if (ins.find(read(mem, cpu->pc)) != ins.end())
+        if (ins.find(isn_read(mem, cpu->pc)) != ins.end())
         {
-            // std::cout<<std::hex<<"Instruction:"<<(uint)read(mem,cpu->pc)<<'/'<<(int)mem[cpu->pc]<<" at "<<(int)cpu->pc<<'\n';
-            // std::cout<<"Instruction method loc:"<<&ins[cpu->pc]<<"\n\n";
-
-            ins[read(mem, cpu->pc)](mem, rw, cpu);
-            //            std::cout<<"pc after:"<<(int)cpu->pc<<'\n';
+            //execute function opcode
+            ins[isn_read(mem, cpu->pc)](mem, rw, cpu);
         }
-        else
+        else //if invalid opcode
         {
-            std::cout << "Unknown Instruction:" << (int)read(mem, cpu->pc) << " at " << cpu->pc << '\n';
+            std::cout << "Unknown Instruction:" << (int)isn_read(mem, cpu->pc) << " at " << cpu->pc << '\n';
             break;
         }
     }

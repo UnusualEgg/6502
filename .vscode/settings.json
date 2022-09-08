@@ -1,7 +1,17 @@
 {
     "makefile.extensionOutputFolder": "./.vscode",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "*.tcc": "cpp",
+        "exception": "cpp",
+        "fstream": "cpp",
+        "iosfwd": "cpp",
+        "new": "cpp",
+        "ostream": "cpp",
+        "stop_token": "cpp",
+        "streambuf": "cpp",
+        "istream": "cpp",
+        "limits": "cpp"
     },
     "C_Cpp.errorSquiggles": "Enabled",
     "makefile.launchConfigurations": [

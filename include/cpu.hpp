@@ -52,6 +52,7 @@ struct cpustruct
     uint16 pc; // 32 bits long
     int8 bp;
     int8 sp;
+	bool isHalted;
 };
 
 uint16 getSP(cpustruct *cpu) {
