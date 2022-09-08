@@ -9,7 +9,7 @@ typedef unsigned short uint16;
 	spdlog::debug("Printing stack:\n");                \
 	for (int i = 0x100; i <= 0x1ff; i++)       \
 	{                                          \
-		spdlog::debug((int)isn_read(mem, i));       \
+		spdlog::debug((int)ins_read(mem, i));       \
 		spdlog::debug(", ");       \
 	};                                         \
 	spdlog::debug("\b\b sp:"); \

@@ -52,14 +52,14 @@ int Emulator::execute(int8 *mem, bool *rw, cpustruct *cpu)
     {
         if (cpu->isHalted) {break;}
         // check if valid opcode
-        if (ins.find(isn_read(mem, cpu->pc)) != ins.end())
+        if (ins.find(ins_read(mem, cpu->pc)) != ins.end())
         {
             //execute function opcode
-            ins[isn_read(mem, cpu->pc)](mem, rw, cpu);
+            ins[ins_read(mem, cpu->pc)](mem, rw, cpu);
         }
         else //if invalid opcode
         {
-            std::cout << "Unknown Instruction:" << (int)isn_read(mem, cpu->pc) << " at " << cpu->pc << '\n';
+            std::cout << "Unknown Instruction:" << (int)ins_read(mem, cpu->pc) << " at " << cpu->pc << '\n';
             break;
         }
     }

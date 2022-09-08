@@ -10,20 +10,22 @@ typedef unsigned short uint16;
 	spdlog::debug("Printing stack:\n");                \
 	for (int i = 0x100; i <= 0x1ff; i++)       \
 	{                                          \
-		spdlog::debug((int)isn_read(mem, i));       \
+		spdlog::debug((int)ins_read(mem, i));       \
 		spdlog::debug(", ");       \
 	};                                         \
 	spdlog::debug("\b\b sp:"); \
 	spdlog::debug((int)cpu->sp);\
 	spdlog::debug("\n");
 //-----------------------------Memory-------------------------
-int8 isn_read(int8 *mem, uint16 addr,cpustruct *cpu)
+uint16 readaddr(int8 *mem, uint16 addr);
+int8 ins_read(int8 *mem, uint16 addr)
 {
 	if (addr >= 0 && addr <= 0xffff)
 	{
 		int itmp;
 		char ctmp;
 		auto a = std::string();
+		uint16 ptr;
 		
 		switch (addr)
 		{
@@ -37,15 +39,14 @@ int8 isn_read(int8 *mem, uint16 addr,cpustruct *cpu)
 			break;
 		case 0x4002:
 			getline(std::cin,a);
-			uint16 ptr = mem[0x4003];
+			ptr = readaddr(mem,0x4003);
 			for (int i=0;i<a.length();i++) {
 				mem[ptr]=a.data()[i];
 				ptr++;
 			}
-			break;
+			return 1;
 		default:
 			return mem[addr];
-			break;
 		}
 	} 
 	else 
@@ -69,12 +70,13 @@ bool ins_write(int8 *mem, bool *rw, uint16 addr, int8 value)
 		case 0x4000://int
 			std::cout<<(int)value;
 			break;
-		case 0x4001:
+		case 0x4001://char
 			std::cout<<(char)value;
 			break;
-		case 0x4002:
-			for (int i=addr;mem[i]!=0;i++){
-				std::cout<<(char)mem[i];
+		case 0x4002://str (0x4003:lower ptr, 0x4004:higher ptr)
+			std::cout<<"print: ptr:"<<(int)readaddr(mem,0x4003)<<std::endl;
+			for (int i=readaddr(mem,0x4003);mem[i]!=0;i++){
+				std::cout<<(char)mem[i]<<' '<<i<<'\n';
 			}
 			break;
 		default:
@@ -103,12 +105,12 @@ void php(int8 *mem, bool *rw, cpustruct *cpu)
 void pla(int8 *mem, cpustruct *cpu)
 {
 	cpu->sp++;
-	cpu->a = isn_read(mem, getSP(cpu));
+	cpu->a = ins_read(mem, getSP(cpu));
 };
 void plp(int8 *mem, cpustruct *cpu)
 {
 	cpu->sp++;
-	cpu->sr = isn_read(mem, cpu->pc) & 0b1101111;
+	cpu->sr = ins_read(mem, cpu->pc) & 0b1101111;
 };
 
 void pushaddr(int8 *mem, bool *rw, cpustruct *cpu, uint16 addr)
@@ -125,7 +127,7 @@ void pushaddr(int8 *mem, bool *rw, cpustruct *cpu, uint16 addr)
 /// @return 
 uint16 readaddr(int8 *mem, uint16 addr)
 {
-	return ((((uint16) isn_read(mem, addr + 1)) << 8) + ((uint16) isn_read(mem, addr)));
+	return ((((uint16) ins_read(mem, addr + 1)) << 8) + ((uint16) ins_read(mem, addr)));
 };
 
 void loadaddrlittle(int8 *mem, cpustruct *cpu, uint16 addr)
@@ -136,7 +138,7 @@ void loadaddrlittle(int8 *mem, cpustruct *cpu, uint16 addr)
 
 void loadaddrbig(int8 *mem, cpustruct *cpu, uint16 addr)
 {
-	cpu->pc = (((uint16)isn_read(mem, addr)) << 8) + ((uint16)isn_read(mem, addr + 1));
+	cpu->pc = (((uint16)ins_read(mem, addr)) << 8) + ((uint16)ins_read(mem, addr + 1));
 };
 
 void pushpc(int8 *mem, bool *rw, cpustruct *cpu, uint16 off = 0)
@@ -150,6 +152,6 @@ void pushpc(int8 *mem, bool *rw, cpustruct *cpu, uint16 off = 0)
 
 void pullpc(int8 *mem, cpustruct *cpu)
 {
-	cpu->pc = (uint16)isn_read(mem, getSP(cpu)) | (((uint16)isn_read(mem, getSP(cpu) + 1)) << 8);
+	cpu->pc = (uint16)ins_read(mem, getSP(cpu)) | (((uint16)ins_read(mem, getSP(cpu) + 1)) << 8);
 	cpu->sp += 2;
 };

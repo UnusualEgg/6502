@@ -5,27 +5,23 @@ CHAR_OUT=$4001
 STR_out=$4002
 
 .segment "STARTUP"
-.org 0
+ptr: .word hellostr
+
 resethandler:
-    lda #$02
-    sta hm
-    jsr addtwo
+    lda ptr
+    sta $4003
+    lda ptr+1
+    sta $4004
 
-    lda #$ab
-    sta INT_OUT
-hm:
+    sta STR_out
     .byte HLT
-    ; .byte HLT
-    ; .byte $02,$01
 
-addtwo:
-adc #$02
-rts
 
 vblank:
 jmp vblank
-;gawrrr
 
+.segment "RODATA"
+hellostr: .byte "Wussap shawty", 0
 
 .segment "VECTORS"
-.word vblank, resethandler, $aabb
+.word vblank, resethandler, $000a
