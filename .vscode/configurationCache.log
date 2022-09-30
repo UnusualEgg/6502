@@ -1,1 +1,1 @@
-{"buildTargets":["all","clean","clean/fast","cmake_check_build_system","cmake_force","default_target","depend","edit_cache","edit_cache/fast","help","nes","nes/fast","preinstall","preinstall/fast","rebuild_cache","rebuild_cache/fast","src/nes.cpp.i","src/nes.cpp.o","src/nes.cpp.s","src/nes.i","src/nes.o","src/nes.s"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
+{"buildTargets":[],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

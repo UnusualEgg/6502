@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Sep  7 16:02:16 2022
+# Make data base, printed on Thu Sep 29 19:18:33 2022
 
 # Variables
 
@@ -24,6 +24,8 @@ SNAP_INSTANCE_KEY =
 GJS_DEBUG_OUTPUT = stderr
 # environment
 VSCODE_CWD = /home/luna
+# environment
+LIBVIRT_DEFAULT_URI = qemu:///system
 # default
 MAKE_COMMAND := make
 # environment
@@ -33,7 +35,7 @@ QT_ACCESSIBILITY = 1
 # environment
 SNAP_INSTANCE_NAME = code
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/106/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/108/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # environment
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
@@ -49,11 +51,11 @@ XDG_DATA_DIRS = /usr/share/ubuntu:/usr/local/share/:/usr/share/:/var/lib/snapd/d
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = /home/luna/.config/Code/CachedData/784b0177c56c607789f9638da7b6bf3230d47a8c
+VSCODE_CODE_CACHE_PATH = /home/luna/.config/Code/CachedData/74b1f979648cc44d385a2286793c226e611f59e7
 # environment
 LANG = C
 # environment
-XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.Q8YDS1
+XAUTHORITY = /run/user/1000/.mutter-Xwaylandauth.8XQAT1
 # default
 .LOADED := 
 # default
@@ -93,7 +95,7 @@ SNAP_REEXEC =
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 5515
+VSCODE_PID = 15621
 # environment
 XDG_SESSION_TYPE = wayland
 # automatic
@@ -103,7 +105,7 @@ BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile (from 'Makefile', line 60)
 CMAKE_SOURCE_DIR = /home/funny-system/prg/6502
 # environment
-SESSION_MANAGER = local/lunas-ubuntu:@/tmp/.ICE-unix/2044,unix/lunas-ubuntu:/tmp/.ICE-unix/2044
+SESSION_MANAGER = local/lunas-ubuntu:@/tmp/.ICE-unix/2158,unix/lunas-ubuntu:/tmp/.ICE-unix/2158
 # automatic
 *F = $(notdir $*)
 # environment
@@ -137,7 +139,7 @@ MAKE = $(MAKE_COMMAND)
 # environment
 SNAP_COOKIE = Tw-aryyz9_XXTev_HCtb5NBw5xZBZopAI0xqG59xG7stFneu6uY4
 # environment
-PATH = /home/luna/.local/bin:/home/luna/bin:/home/luna/bin:/home/luna/.cargo/bin:/home/luna/.local/bin:/home/luna/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+PATH = /home/luna/.local/bin:/home/luna/bin:/home/luna/bin:/home/luna/.cargo/bin:/home/luna/.local/bin:/home/luna/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/i386elfgcc/bin
 # default
 MAKEFILES := 
 # automatic
@@ -145,11 +147,11 @@ MAKEFILES :=
 # environment
 SNAP_USER_COMMON = /home/luna/snap/code/common
 # environment
-SNAP = /snap/code/106
+SNAP = /snap/code/108
 # environment
-INVOCATION_ID = 26b0ed8dd84e4ccfaebd54b26f2e1c88
+INVOCATION_ID = 4092ece9178e46908247a1caddd2875b
 # environment
-SNAP_REVISION = 106
+SNAP_REVISION = 108
 # environment
 SNAP_REAL_HOME = /home/luna
 # environment
@@ -183,7 +185,7 @@ SNAP_ARCH = amd64
 # makefile
 .DEFAULT_GOAL := default_target
 # environment
-SYSTEMD_EXEC_PID = 2071
+SYSTEMD_EXEC_PID = 2186
 # makefile (from 'Makefile', line 54)
 RM = /usr/bin/cmake -E rm -f
 # environment
@@ -195,23 +197,23 @@ GTK_MODULES = gail:atk-bridge
 # default
 MAKE_VERSION := 4.3
 # environment
-SNAP_DATA = /var/snap/code/106
+SNAP_DATA = /var/snap/code/108
 # environment
 SNAP_CONTEXT = Tw-aryyz9_XXTev_HCtb5NBw5xZBZopAI0xqG59xG7stFneu6uY4
 # environment
-MANAGERPID = 1894
+MANAGERPID = 2003
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 5463
+GIO_LAUNCHED_DESKTOP_FILE_PID = 15573
 # makefile (from 'Makefile', line 35)
 MAKESILENT = -s
 # environment
-_ = /snap/code/106/usr/share/code/code
+_ = /snap/code/108/usr/share/code/code
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/luna/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-JOURNAL_STREAM = 8:37192
+JOURNAL_STREAM = 8:38275
 # environment
 XDG_SESSION_CLASS = user
 # environment
@@ -223,11 +225,11 @@ QT_IM_MODULE = ibus
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-5f01da26-1.71.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-5f01da26-1.71.2-main.sock
 # environment
 SNAP_NAME = code
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/106/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/108/usr/share/glib-2.0/schemas
 # environment
 IM_CONFIG_PHASE = 1
 # default
@@ -235,7 +237,7 @@ IM_CONFIG_PHASE = 1
 # automatic
 <F = $(notdir $<)
 # environment
-SNAP_VERSION = 784b0177
+SNAP_VERSION = 74b1f979
 # default
 SUFFIXES := 
 # environment
@@ -247,7 +249,7 @@ SNAP_COMMON = /var/snap/code/common
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
 # environment
-SNAP_USER_DATA = /home/luna/snap/code/106
+SNAP_USER_DATA = /home/luna/snap/code/108
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -255,7 +257,7 @@ GDMSESSION = ubuntu
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # variable set hash-table stats:
-# Load=122/1024=12%, Rehash=0, Collisions=4/161=2%
+# Load=123/1024=12%, Rehash=0, Collisions=4/162=2%
 
 # Pattern-specific Variable Values
 
@@ -265,9 +267,9 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 
 # RCS: could not be stat'd.
 # SCCS: could not be stat'd.
-# . (device 2054, inode 3280716): 19 files, no impossibilities.
+# . (device 2054, inode 3280716): 17 files, no impossibilities.
 
-# 19 files, no impossibilities in 3 directories.
+# 17 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
@@ -282,8 +284,8 @@ SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd
 %: s.%
 
 %.hpux_make_needs_suffix_list:
-
  
+
 # 6 implicit rules, 0 (0.0%) terminal.
 # Files
 
@@ -531,12 +533,12 @@ src/nes.cpp.i:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 58 / storage = 596 B / avg = 10 B
-# current buf: size = 8162 B / used = 596 B / count = 58 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 56 / storage = 570 B / avg = 10 B
+# current buf: size = 8162 B / used = 570 B / count = 56 / avg = 10 B
 
-# strcache performance: lookups = 171 / hit rate = 66%
+# strcache performance: lookups = 169 / hit rate = 66%
 # hash-table stats:
-# Load=58/8192=1%, Rehash=0, Collisions=0/171=0%
-# Finished Make data base on Wed Sep  7 16:02:16 2022
+# Load=56/8192=1%, Rehash=0, Collisions=0/169=0%
+# Finished Make data base on Thu Sep 29 19:18:33 2022
 
  

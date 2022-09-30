@@ -4,18 +4,12 @@ make: Entering directory '/home/luna/prg/6502'
 /usr/bin/cmake -E cmake_progress_start /home/funny-system/prg/6502/CMakeFiles /home/funny-system/prg/6502//CMakeFiles/progress.marks
 make -s -f CMakeFiles/Makefile2 all
 make[1]: Entering directory '/home/luna/prg/6502'
-make -s -f CMakeFiles/nes.dir/build.make CMakeFiles/nes.dir/depend
- 
-make[2]: Entering directory '/home/luna/prg/6502'
-cd /home/funny-system/prg/6502 && /usr/bin/cmake -E cmake_depends "Unix Makefiles" /home/funny-system/prg/6502 /home/funny-system/prg/6502 /home/funny-system/prg/6502 /home/funny-system/prg/6502 /home/funny-system/prg/6502/CMakeFiles/nes.dir/DependInfo.cmake --color=
-make[2]: Leaving directory '/home/luna/prg/6502'
-make -s -f CMakeFiles/nes.dir/build.make CMakeFiles/nes.dir/build
-make[2]: Entering directory '/home/luna/prg/6502'
-make[2]: Leaving directory '/home/luna/prg/6502'
 make[1]: Leaving directory '/home/luna/prg/6502'
 make: Leaving directory '/home/luna/prg/6502'
  
-make[2]: *** No rule to make target 'src/nes.cpp', needed by 'CMakeFiles/nes.dir/src/nes.cpp.o'.
-make[1]: *** [CMakeFiles/Makefile2:83: CMakeFiles/nes.dir/all] Error 2
+make[1]: CMakeFiles/Makefile2: No such file or directory
+make[1]: *** No rule to make target 'CMakeFiles/Makefile2'.
+make[1]: Failed to remake makefile 'CMakeFiles/Makefile2'.
+make[1]: *** No rule to make target 'all'.
 make: *** [Makefile:91: all] Error 2
 
